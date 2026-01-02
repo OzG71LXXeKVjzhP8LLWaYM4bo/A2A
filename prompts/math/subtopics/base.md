@@ -78,3 +78,4 @@ CRITICAL RULES (MUST FOLLOW):
 4. NEVER use literal \\n (backslash-n) in ANY field - use spaces or <br> tags instead
 5. EXPLANATIONS MUST BE CONCISE (MAX 100 WORDS)
 6. Use subtopic_name: "{{DB_SUBTOPIC_NAME}}" for ALL questions
+7. NEVER include placeholder text like {{IMAGE}} in content or question fields - these will NOT be replaced
