@@ -1,0 +1,188 @@
+{
+  "geosdf_prompts": [
+    {
+      "id": "triangle_right_345",
+      "description": "A right triangle ABC where angle C is 90 degrees, side AC = 3 cm, side BC = 4 cm, and the hypotenuse AB = 5 cm. Label all sides with their lengths and mark the right angle with a small square."
+    },
+    {
+      "id": "triangle_isosceles",
+      "description": "An isosceles triangle PQR where PQ = PR = 6 cm, and the base QR = 4 cm. The vertex angle at P is 40 degrees. Label all sides and the vertex angle."
+    },
+    {
+      "id": "triangle_equilateral",
+      "description": "An equilateral triangle XYZ with each side measuring 5 cm. All interior angles are 60 degrees. Label each vertex and show one angle measurement."
+    },
+    {
+      "id": "parallel_lines_transversal",
+      "description": "Two horizontal parallel lines L1 and L2 cut by a transversal line T at a 65 degree angle. Label the corresponding angles and alternate interior angles."
+    },
+    {
+      "id": "circle_tangent",
+      "description": "A circle with center O and radius 4 cm. Point P is outside the circle at distance 8 cm from O. Draw two tangent lines from P to the circle, touching at points A and B."
+    },
+    {
+      "id": "circle_inscribed_triangle",
+      "description": "A circle with an inscribed equilateral triangle ABC. The circle has center O and the triangle vertices touch the circumference. Label the center and all vertices."
+    },
+    {
+      "id": "perpendicular_bisector",
+      "description": "A line segment AB of length 8 cm with its perpendicular bisector line M passing through the midpoint. Mark the midpoint and show the 90 degree angle."
+    },
+    {
+      "id": "angle_bisector",
+      "description": "An angle AOB of 70 degrees with its angle bisector OC. Label the original angle and show that each half is 35 degrees."
+    },
+    {
+      "id": "rectangle_diagonal",
+      "description": "A rectangle ABCD with length 6 cm and width 4 cm. Draw both diagonals AC and BD intersecting at point E. Label all vertices and the intersection point."
+    },
+    {
+      "id": "rhombus_diagonals",
+      "description": "A rhombus PQRS with diagonals PR = 10 cm and QS = 6 cm intersecting at right angles at point O. Label all vertices and show the perpendicular intersection."
+    },
+    {
+      "id": "trapezoid_isosceles",
+      "description": "An isosceles trapezoid ABCD with parallel sides AB = 10 cm (top) and CD = 16 cm (bottom). The non-parallel sides are each 5 cm. Label all measurements."
+    },
+    {
+      "id": "similar_triangles",
+      "description": "Two similar triangles: triangle ABC with sides 3, 4, 5 cm and triangle DEF with sides 6, 8, 10 cm. Position them side by side to show the 1:2 ratio."
+    },
+    {
+      "id": "circle_chord_diameter",
+      "description": "A circle with center O, diameter AB = 10 cm, and a chord CD of length 6 cm parallel to AB. Show the perpendicular distance from O to chord CD."
+    },
+    {
+      "id": "exterior_angle_theorem",
+      "description": "A triangle ABC with exterior angle ACD at vertex C. The interior angles at A and B are 50 and 60 degrees respectively. Show that exterior angle ACD = 110 degrees."
+    },
+    {
+      "id": "quadrilateral_angles",
+      "description": "A quadrilateral ABCD with angles: A = 80 degrees, B = 100 degrees, C = 70 degrees, D = 110 degrees. Label all four angles to show they sum to 360 degrees."
+    },
+    {
+      "id": "altitude_triangle",
+      "description": "A scalene triangle ABC with altitude h drawn from vertex A perpendicular to base BC, meeting at point D. Label the altitude and show the right angle at D."
+    },
+    {
+      "id": "median_triangle",
+      "description": "A triangle ABC with all three medians drawn, intersecting at centroid G. Label the midpoints of each side as D, E, F and show the centroid."
+    },
+    {
+      "id": "pythagorean_visual",
+      "description": "A right triangle with legs a = 3 and b = 4, hypotenuse c = 5. Draw squares on each side to visually demonstrate a² + b² = c² (9 + 16 = 25)."
+    },
+    {
+      "id": "concentric_circles",
+      "description": "Two concentric circles with center O. Inner circle has radius 3 cm, outer circle has radius 5 cm. Shade the annular region between them."
+    },
+    {
+      "id": "regular_hexagon",
+      "description": "A regular hexagon ABCDEF inscribed in a circle with center O. Draw all diagonals from vertex A and label each vertex. Show one interior angle of 120 degrees."
+    }
+  ],
+  "ccj_prompts": [
+    {
+      "id": "venn_two_sets",
+      "description": "A Venn diagram showing two overlapping sets: Set A contains {1, 2, 3, 4, 5} and Set B contains {4, 5, 6, 7, 8}. The intersection contains {4, 5}. Label each region with its elements."
+    },
+    {
+      "id": "venn_three_sets",
+      "description": "A Venn diagram with three overlapping circles representing Sets A, B, and C. Label each of the 7 distinct regions (A only, B only, C only, A∩B, B∩C, A∩C, A∩B∩C)."
+    },
+    {
+      "id": "flowchart_decision",
+      "description": "A flowchart for deciding whether to bring an umbrella: Start → Check weather forecast → Diamond decision 'Rain predicted?' → Yes: Bring umbrella → End, No: Don't bring umbrella → End."
+    },
+    {
+      "id": "flowchart_login",
+      "description": "A flowchart for user login: Start → Enter credentials → Validate → Decision 'Valid?' → Yes: Grant access → End, No: Show error → Retry counter → Decision 'Attempts < 3?' → Yes: loop back, No: Lock account → End."
+    },
+    {
+      "id": "sequence_arithmetic",
+      "description": "A visual representation of the arithmetic sequence 2, 5, 8, 11, 14 showing each term as a row of dots, with arrows indicating the common difference of +3 between terms."
+    },
+    {
+      "id": "sequence_geometric",
+      "description": "A visual representation of the geometric sequence 2, 6, 18, 54 using progressively larger squares, with multiplication arrows showing ×3 between each term."
+    },
+    {
+      "id": "number_line_integers",
+      "description": "A number line from -5 to 5 with all integers marked. Highlight the positions of -3, 0, and 4 with colored dots and labels."
+    },
+    {
+      "id": "number_line_fractions",
+      "description": "A number line from 0 to 2 showing the positions of 1/4, 1/2, 3/4, 1, 5/4, 3/2, 7/4, and 2. Each fraction should be labeled above its position."
+    },
+    {
+      "id": "bar_chart_simple",
+      "description": "A bar chart showing favorite fruits: Apples (15), Bananas (12), Oranges (8), Grapes (10). Use different colors for each bar with a legend and axis labels."
+    },
+    {
+      "id": "pie_chart_budget",
+      "description": "A pie chart showing monthly budget allocation: Housing 35%, Food 20%, Transportation 15%, Entertainment 10%, Savings 20%. Label each slice with category and percentage."
+    },
+    {
+      "id": "tree_diagram_probability",
+      "description": "A probability tree diagram for flipping a coin twice. Show all branches: First flip (H/T, 0.5 each) → Second flip (H/T, 0.5 each) → Four outcomes (HH, HT, TH, TT) with probabilities."
+    },
+    {
+      "id": "tree_diagram_combinations",
+      "description": "A tree diagram showing outfit combinations: 3 shirts (Red, Blue, Green) × 2 pants (Jeans, Khakis) = 6 total combinations. List all combinations at the end branches."
+    },
+    {
+      "id": "coordinate_plane_points",
+      "description": "A coordinate plane with x and y axes from -5 to 5. Plot and label the points A(2,3), B(-1,4), C(-3,-2), D(4,-1), and the origin O(0,0)."
+    },
+    {
+      "id": "coordinate_plane_line",
+      "description": "A coordinate plane showing the line y = 2x + 1. Plot at least 3 points on the line: (-1,-1), (0,1), (1,3), (2,5). Label the y-intercept and show the slope."
+    },
+    {
+      "id": "function_parabola",
+      "description": "A graph of the parabola y = x² on a coordinate plane. Show the vertex at (0,0), axis of symmetry, and plot points at x = -2, -1, 0, 1, 2."
+    },
+    {
+      "id": "concept_map_fractions",
+      "description": "A concept map for fractions with central node 'Fractions' connected to: Types (proper, improper, mixed), Operations (add, subtract, multiply, divide), Equivalence, and Decimals."
+    },
+    {
+      "id": "timeline_history",
+      "description": "A horizontal timeline from 1900 to 2000 with major events: 1914 (WWI starts), 1945 (WWII ends), 1969 (Moon landing), 1989 (Berlin Wall falls). Use evenly spaced markers."
+    },
+    {
+      "id": "place_value_chart",
+      "description": "A place value chart showing the number 4,572.38 with columns for thousands, hundreds, tens, ones, decimal point, tenths, hundredths. Each digit in its correct column."
+    },
+    {
+      "id": "fraction_bar_model",
+      "description": "A bar model showing the fraction 3/4: a rectangle divided into 4 equal parts with 3 parts shaded. Label the shaded portion as 3/4 and unshaded as 1/4."
+    },
+    {
+      "id": "array_multiplication",
+      "description": "A visual array showing 4 × 5 = 20 using a grid of 4 rows and 5 columns of dots. Label the dimensions and total count."
+    }
+  ],
+  "edge_case_prompts": [
+    {
+      "id": "mixed_geometry_concept",
+      "description": "A diagram showing the relationship between area formulas: a square, rectangle, triangle, and circle, each with their area formula labeled inside."
+    },
+    {
+      "id": "angle_types_reference",
+      "description": "A reference diagram showing all angle types: acute (45°), right (90°), obtuse (120°), straight (180°), reflex (270°), arranged in a grid with labels."
+    },
+    {
+      "id": "polygon_hierarchy",
+      "description": "A hierarchy diagram showing polygon classification: Polygons → Triangles/Quadrilaterals/Pentagons/Hexagons, with Quadrilaterals further divided into parallelograms, rectangles, squares, rhombi, trapezoids."
+    },
+    {
+      "id": "transformation_example",
+      "description": "A coordinate plane showing triangle ABC and its reflection A'B'C' across the y-axis. Original triangle at (1,1), (3,1), (2,3) and reflected at (-1,1), (-3,1), (-2,3)."
+    },
+    {
+      "id": "unit_circle_quadrants",
+      "description": "A unit circle on a coordinate plane showing all four quadrants. Mark the angles 0°, 90°, 180°, 270°, 360° and their radian equivalents (0, π/2, π, 3π/2, 2π)."
+    }
+  ]
+}
