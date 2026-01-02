@@ -1,6 +1,7 @@
 """A2A Server implementation using a2a-sdk."""
 
 import asyncio
+import json
 import uuid
 from typing import Any, Callable, Optional
 from dataclasses import dataclass
@@ -18,6 +19,7 @@ from a2a.types import (
     Message,
     TextPart,
 )
+from starlette.middleware.cors import CORSMiddleware
 import uvicorn
 
 
@@ -66,11 +68,11 @@ class BaseAgentExecutor(AgentExecutor):
             else:
                 result = {"message": "No handler configured"}
 
-            # Create response message
+            # Create response message - use json.dumps for proper serialization
             response_message = Message(
                 role="agent",
                 message_id=str(uuid.uuid4()),
-                parts=[TextPart(text=str(result))],
+                parts=[TextPart(text=json.dumps(result, default=str))],
             )
 
             # Update task with result
@@ -142,10 +144,20 @@ async def run_agent_server(
     task_handler: Optional[Callable] = None,
 ) -> None:
     """Run an A2A agent server."""
-    app = create_a2a_app(agent_config, task_handler)
+    a2a_app = create_a2a_app(agent_config, task_handler)
+    app = a2a_app.build()
+
+    # Add CORS middleware to allow browser requests
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["*"],
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
 
     config = uvicorn.Config(
-        app=app.build(),
+        app=app,
         host="0.0.0.0",
         port=agent_config.port,
         log_level="info",

@@ -49,7 +49,9 @@ class OrchestratorAgent(BaseAgent):
         """Handle incoming task requests."""
         message = task.status.message
         if message and message.parts:
-            task_text = message.parts[0].text
+            # A2A SDK wraps parts - access via .root.text for TextPart
+            part = message.parts[0]
+            task_text = part.root.text if hasattr(part, 'root') else part.text
             try:
                 task_data = json.loads(task_text)
             except json.JSONDecodeError:

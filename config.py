@@ -33,6 +33,7 @@ class AgentPorts(BaseModel):
     database: int = 5003
     math: int = 5004
     reading: int = 5005
+    verifier: int = 5006
 
 
 class R2Config(BaseModel):

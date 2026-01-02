@@ -12,22 +12,30 @@ This project implements a multi-agent architecture using Google's [A2A Protocol]
 │                 REST API + Coordination                      │
 └─────────────────────────┬───────────────────────────────────┘
                           │ A2A Protocol
-          ┌───────────────┼───────────────┬───────────────┐
-          ▼               ▼               ▼               ▼
-┌─────────────────┐ ┌───────────┐ ┌───────────┐ ┌───────────┐
-│ THINKING SKILLS │ │   IMAGE   │ │ DATABASE  │ │   MATH    │
-│   (Port 5001)   │ │   (5002)  │ │  (5003)   │ │  (5004)   │
-│                 │ │           │ │           │ │           │
-│ Gemini Flash    │ │ LLM Router│ │ PostgreSQL│ │ (Future)  │
-│ Question Gen    │ │ GeoSDF/CCJ│ │ asyncpg   │ │           │
-└─────────────────┘ └───────────┘ └───────────┘ └───────────┘
+    ┌─────────────┬───────┼───────┬─────────────┬─────────────┐
+    ▼             ▼       ▼       ▼             ▼             ▼
+┌─────────┐ ┌─────────┐ ┌─────┐ ┌────────┐ ┌────────┐ ┌────────┐
+│THINKING │ │VERIFIER │ │IMAGE│ │DATABASE│ │  MATH  │ │READING │
+│ SKILLS  │◄┤         │ │     │ │        │ │        │ │        │
+│ (5001)  │ │ (5006)  │ │(5002│ │ (5003) │ │ (5004) │ │ (5005) │
+│         │►┤         │ │     │ │        │ │        │ │        │
+│ Gemini  │ │ Pass/   │ │ LLM │ │Postgres│ │(Future)│ │(Future)│
+│ Gen     │ │ Fail    │ │Route│ │ asyncpg│ │        │ │        │
+└─────────┘ └─────────┘ └─────┘ └────────┘ └────────┘ └────────┘
+                │
+        ┌───────┴───────┐
+        │  Feedback     │
+        │  Loop         │
+        │  (max 3x)     │
+        └───────────────┘
 ```
 
 ## Features
 
-- **Multi-Agent Architecture**: Separate agents for questions, images, and database operations
+- **Multi-Agent Architecture**: Separate agents for questions, verification, images, and database operations
 - **A2A Protocol**: Standard inter-agent communication via JSON-RPC over HTTP
 - **Gemini Integration**: Uses Gemini Flash for question generation and routing decisions
+- **Auto-Verification**: Questions are automatically verified after generation with a pass/fail feedback loop
 - **Triple Image Generation**: LLM-routed pipeline with GeoSDF (geometry), Spatial (3D cubes), and CCJ (general diagrams)
 - **SAT-Style Diagrams**: Clean, professional educational diagrams with precise geometry
 - **Cloudflare R2 Storage**: Auto-upload generated images with public URLs
@@ -92,6 +100,7 @@ This starts all agents on their respective ports:
 - Thinking Skills: http://localhost:5001
 - Image: http://localhost:5002
 - Database: http://localhost:5003
+- Verifier: http://localhost:5006
 
 ### Run Individual Agents
 
@@ -101,6 +110,7 @@ uv run python main.py orchestrator
 uv run python main.py thinking_skills
 uv run python main.py image
 uv run python main.py database
+uv run python main.py verifier
 ```
 
 ### Generate an Exam
@@ -202,6 +212,34 @@ Generates thinking skills questions across 8 subtopics:
 - Sequencing
 - Spatial Reasoning
 
+Questions are automatically sent to the Verifier Agent after generation.
+
+### Verifier Agent (Port 5006)
+
+Automatically validates generated questions using a pass/fail feedback loop:
+
+```
+Generate → Verify → PASS? → Done
+              ↓
+            FAIL
+              ↓
+    Get specific feedback
+              ↓
+    Regenerate with feedback
+              ↓
+         Re-verify
+              ↓
+    (loop max 3 times)
+```
+
+**Verification checks (all must pass):**
+1. **Answer Correctness** - Independently solves the question to verify the marked answer
+2. **Quality** - Grammar, clarity, difficulty appropriateness, distractor quality
+3. **Format** - Structure (4 choices, 1 correct), no broken formatting
+4. **Explanation** - Explanation logic matches the correct answer
+
+If any check fails, the verifier returns specific feedback and the question is regenerated.
+
 ### Image Agent (Port 5002)
 
 Generates SAT-style educational diagrams using an LLM-routed triple approach:
@@ -265,6 +303,7 @@ A2A/
 │   ├── base_agent.py       # Base class with Gemini integration
 │   ├── orchestrator.py     # REST API + coordination
 │   ├── thinking_skills_agent.py
+│   ├── verifier_agent.py   # Question verification with feedback loop
 │   ├── image_agent.py      # LLM router + CCJ implementation
 │   ├── geosdf_generator.py # GeoSDF constraint optimization
 │   ├── spatial_generator.py # 3D cube stack questions
@@ -275,11 +314,13 @@ A2A/
 │   └── client.py           # A2A client for inter-agent calls
 │
 ├── models/
-│   └── question.py         # Pydantic models
+│   ├── question.py         # Question/Exam Pydantic models
+│   └── verification.py     # Verification result models
 │
 ├── prompts/
 │   ├── thinking-skills/    # Question generation prompts
 │   ├── math/               # Math prompts (future)
+│   ├── verification/       # Verification prompts (answer, quality, format, explanation)
 │   └── image_test_prompts.json  # 45 test prompts for image gen
 │
 └── tests/

@@ -1,6 +1,7 @@
 """A2A Client for inter-agent communication."""
 
 import json
+import uuid
 from typing import Any, Optional
 from dataclasses import dataclass
 
@@ -48,16 +49,17 @@ class A2AClient:
     ) -> dict:
         """Send a task to an agent and wait for completion."""
         try:
-            # Create task message
+            # Create task message with required messageId
             task_message = Message(
                 role="user",
+                message_id=str(uuid.uuid4()),
                 parts=[TextPart(text=message)],
             )
 
             # Send task via JSON-RPC
             payload = {
                 "jsonrpc": "2.0",
-                "method": "tasks/send",
+                "method": "message/send",
                 "params": {
                     "message": task_message.model_dump(),
                     "metadata": params or {},
@@ -91,6 +93,7 @@ class A2AClient:
         try:
             task_message = Message(
                 role="user",
+                message_id=str(uuid.uuid4()),
                 parts=[TextPart(text=message)],
             )
 
@@ -130,4 +133,5 @@ AGENT_ENDPOINTS = {
     "database": AgentEndpoint("database", "http://localhost:5003", 5003),
     "math": AgentEndpoint("math", "http://localhost:5004", 5004),
     "reading": AgentEndpoint("reading", "http://localhost:5005", 5005),
+    "verifier": AgentEndpoint("verifier", "http://localhost:5006", 5006),
 }

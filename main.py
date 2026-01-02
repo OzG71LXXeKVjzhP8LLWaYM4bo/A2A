@@ -38,9 +38,14 @@ async def run_agent(agent_name: str):
         agent = DatabaseAgent()
         await agent.run()
 
+    elif agent_name == "verifier":
+        from agents.verifier_agent import VerifierAgent
+        agent = VerifierAgent()
+        await agent.run()
+
     else:
         print(f"Unknown agent: {agent_name}")
-        print("Available agents: orchestrator, thinking_skills, image, database")
+        print("Available agents: orchestrator, thinking_skills, image, database, verifier")
         sys.exit(1)
 
 
@@ -51,6 +56,7 @@ async def run_all():
     print(f"  Thinking Skills:   http://localhost:{config.ports.thinking_skills}")
     print(f"  Image:             http://localhost:{config.ports.image}")
     print(f"  Database:          http://localhost:{config.ports.database}")
+    print(f"  Verifier:          http://localhost:{config.ports.verifier}")
     print()
 
     tasks = [
@@ -58,6 +64,7 @@ async def run_all():
         run_agent("thinking_skills"),
         run_agent("image"),
         run_agent("database"),
+        run_agent("verifier"),
     ]
 
     await asyncio.gather(*tasks)
@@ -73,6 +80,7 @@ def main():
         print("  thinking_skills  - Thinking Skills question generator (port 5001)")
         print("  image            - Image/diagram generator (port 5002)")
         print("  database         - PostgreSQL database operations (port 5003)")
+        print("  verifier         - Question verification agent (port 5006)")
         print("  all              - Run all agents concurrently")
         sys.exit(1)
 
