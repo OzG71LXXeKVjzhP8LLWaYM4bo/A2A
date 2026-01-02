@@ -178,12 +178,16 @@ class OrchestratorAgent(BaseAgent):
             result["steps"].append({"step": "create_exam", "status": "in_progress"})
 
             topic_id = config.topic_uuids.get(exam_type)
+            # Convert exam_type to hyphenated format for database (e.g., "thinking_skills" -> "thinking-skills")
+            exam_type_db = exam_type.replace("_", "-")
             exam_result = await self._create_exam(
                 exam_data={
                     "code": exam_code,
                     "name": exam_name,
                     "description": exam_config.get("exam_description", ""),
+                    "type": exam_type_db,
                     "time_limit": exam_config.get("time_limit", 45),
+                    "question_count": len(question_ids),
                     "topic_id": topic_id,
                 },
                 question_ids=question_ids,

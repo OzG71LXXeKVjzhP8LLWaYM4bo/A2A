@@ -18,12 +18,16 @@ class Question(BaseModel):
     choices: list[Choice]
     explanation: str
     difficulty: str = "2"
+    topic_id: Optional[UUID] = None
     subtopic_id: Optional[UUID] = None
     subtopic_name: str
+    type: str = "multiple-choice"
     requires_image: bool = False
     image_description: Optional[str] = None
     image_url: Optional[str] = None
     tags: list[str] = []
+    showup: bool = True
+    is_active: bool = True
 
     @property
     def correct_choice(self) -> Optional[Choice]:
@@ -53,10 +57,15 @@ class ExamConfig(BaseModel):
 
 
 class ThinkingSkillsConfig(ExamConfig):
-    abstract_count: int = 10
-    verbal_count: int = 8
-    numerical_count: int = 8
-    logical_count: int = 9
+    # 8 subtopics matching n8n and database
+    analogies_count: int = 4
+    critical_thinking_count: int = 4
+    deduction_count: int = 5
+    inference_count: int = 4
+    logical_reasoning_count: int = 5
+    pattern_recognition_count: int = 5
+    sequencing_count: int = 4
+    spatial_reasoning_count: int = 4
 
 
 class MathConfig(ExamConfig):

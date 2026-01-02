@@ -14,65 +14,76 @@ from config import config
 MAX_VERIFICATION_RETRIES = 3
 
 
-# Subtopic configurations
+# Topic UUID for Thinking Skills
+THINKING_SKILLS_TOPIC_ID = "096feb43-20f5-4ab7-8e3f-feb907884f9e"
+
+# Subtopic configurations - aligned with n8n TS-generator.json
 SUBTOPICS = {
     "analogies": {
-        "display_name": "Analogies",
-        "description": "Word analogies, relationships, and logical connections between concepts",
+        "display_name": "Conditional Logic",
+        "description": "If-then reasoning, contrapositive logic, necessary conclusions from conditional statements, and determining what must be true based on given premises.",
         "db_subtopic_name": "Analogies",
-        "image_ratio": 0.05,
+        "db_subtopic_id": "fb7782d6-b227-48eb-a010-a6ea21c3e8df",
+        "image_ratio": 0.00,  # 0% - text-based conditional logic
     },
     "critical_thinking": {
         "display_name": "Critical Thinking",
-        "description": "Analyzing arguments, evaluating evidence, and drawing logical conclusions",
+        "description": "Evaluating arguments by identifying which statement most strengthens or weakens a given argument. Focus on evidence analysis and logical support.",
         "db_subtopic_name": "Critical Thinking",
-        "image_ratio": 0.05,
+        "db_subtopic_id": "b131ca12-b369-4823-a459-a389064dc7bf",
+        "image_ratio": 0.00,  # 0% - text-based argument evaluation
     },
     "deduction": {
         "display_name": "Deduction",
-        "description": "Syllogisms, logical deduction, and drawing conclusions from premises",
+        "description": "Two-person reasoning evaluation where a premise is given in a box and two characters make logical statements. Determine whose reasoning is correct.",
         "db_subtopic_name": "Deduction",
-        "image_ratio": 0.20,
+        "db_subtopic_id": "81762f7f-019e-4834-a764-fc4a830a46db",
+        "image_ratio": 1.00,  # 100% - character portraits (2 people)
     },
     "inference": {
         "display_name": "Inference",
-        "description": "Drawing conclusions from given information and implicit relationships",
+        "description": "Identifying reasoning errors where a person makes a flawed logical conclusion. Questions ask which sentence shows the mistake they have made.",
         "db_subtopic_name": "Inference",
-        "image_ratio": 0.10,
+        "db_subtopic_id": "1b4015b7-8647-4229-afd2-0717ed2786ee",
+        "image_ratio": 1.00,  # 100% - character portraits (1 person)
     },
     "logical_reasoning": {
         "display_name": "Logical Reasoning",
-        "description": "Venn diagrams, seating arrangements, and complex logical problems",
+        "description": "Constraint satisfaction puzzles including ordering people/items, positioning, scheduling, and truth-teller/liar puzzles with multiple conditions.",
         "db_subtopic_name": "Logical Reasoning",
-        "image_ratio": 0.40,
+        "db_subtopic_id": "01915e09-31a5-4757-b666-0a3a8811b663",
+        "image_ratio": 0.10,  # 10% - occasional diagrams for puzzles
     },
     "pattern_recognition": {
         "display_name": "Pattern Recognition",
-        "description": "Visual patterns, sequences, and code-breaking puzzles",
+        "description": "Code-breaking, faulty display problems, digit sequences, and deciphering coded messages. Visual pattern matching with tiles and shapes.",
         "db_subtopic_name": "Pattern Recognition",
-        "image_ratio": 0.30,
+        "db_subtopic_id": "98d8d204-fd1e-431e-b689-f8198235a6bc",
+        "image_ratio": 0.50,  # 50% - faulty displays, visual codes
     },
     "sequencing": {
-        "display_name": "Sequencing",
-        "description": "Number sequences, letter patterns, and ordered arrangements",
+        "display_name": "Numerical Reasoning",
+        "description": "Multi-step word problems requiring calculations with rules. Problems about counting, scheduling, quantities, and price/cost optimization.",
         "db_subtopic_name": "Sequencing",
-        "image_ratio": 0.15,
+        "db_subtopic_id": "40825bd0-994a-4e6e-8417-03aa359b45c6",
+        "image_ratio": 0.05,  # 5% - mostly word problems, occasional tables
     },
     "spatial_reasoning": {
         "display_name": "Spatial Reasoning",
-        "description": "3D visualization, rotations, reflections, and spatial transformations",
+        "description": "Visual puzzles involving shape fitting, puzzle completion, perspective views (top/side/front), and pattern matching with tiles.",
         "db_subtopic_name": "Spatial Reasoning",
-        "image_ratio": 0.50,
+        "db_subtopic_id": "2c6553b7-29cd-4f4e-8291-4ee25921f8e0",
+        "image_ratio": 0.70,  # 70% - shape fitting, perspective views
     },
 }
 
-# Map config field names to subtopic keys
+# Map config field names to subtopic keys - matching ThinkingSkillsConfig
 CONFIG_FIELD_MAP = {
     "analogies_count": "analogies",
     "critical_thinking_count": "critical_thinking",
     "deduction_count": "deduction",
     "inference_count": "inference",
-    "logical_count": "logical_reasoning",
+    "logical_reasoning_count": "logical_reasoning",
     "pattern_recognition_count": "pattern_recognition",
     "sequencing_count": "sequencing",
     "spatial_reasoning_count": "spatial_reasoning",
@@ -266,21 +277,29 @@ class ThinkingSkillsAgent(BaseAgent):
 
             q_data = questions_data[0] if isinstance(questions_data, list) else questions_data
 
+            # Sanitize newlines (matching n8n behavior)
+            def sanitize_newlines(s):
+                if not s or not isinstance(s, str):
+                    return s
+                return s.replace("\\n", "<br>").replace("\n", "<br>")
+
             choices = [
                 Choice(
                     id=c["id"],
-                    text=c.get("text", c.get("content", "")),
+                    text=sanitize_newlines(c.get("text", c.get("content", ""))),
                     is_correct=c["is_correct"],
                 )
                 for c in q_data.get("choices", [])
             ]
 
             return Question(
-                content=q_data.get("content"),
-                question=q_data["question"],
+                content=sanitize_newlines(q_data.get("content")),
+                question=sanitize_newlines(q_data["question"]),
                 choices=choices,
-                explanation=q_data["explanation"],
-                difficulty="3",
+                explanation=sanitize_newlines(q_data["explanation"]),
+                difficulty=str(q_data.get("difficulty", "3")),
+                topic_id=THINKING_SKILLS_TOPIC_ID,
+                subtopic_id=subtopic_config.get("db_subtopic_id"),
                 subtopic_name=q_data.get("subtopic_name", subtopic_config["db_subtopic_name"]),
                 requires_image=q_data.get("requires_image", False),
                 image_description=q_data.get("image_description"),
@@ -406,21 +425,29 @@ Return ONLY the JSON object, no markdown formatting."""
 
             q_data = result if isinstance(result, dict) else result[0]
 
+            # Sanitize newlines (matching n8n behavior)
+            def sanitize_newlines(s):
+                if not s or not isinstance(s, str):
+                    return s
+                return s.replace("\\n", "<br>").replace("\n", "<br>")
+
             choices = [
                 Choice(
                     id=c["id"],
-                    text=c.get("text", c.get("content", "")),
+                    text=sanitize_newlines(c.get("text", c.get("content", ""))),
                     is_correct=c["is_correct"],
                 )
                 for c in q_data.get("choices", [])
             ]
 
             return Question(
-                content=q_data.get("content"),
-                question=q_data["question"],
+                content=sanitize_newlines(q_data.get("content")),
+                question=sanitize_newlines(q_data["question"]),
                 choices=choices,
-                explanation=q_data["explanation"],
-                difficulty="3",
+                explanation=sanitize_newlines(q_data["explanation"]),
+                difficulty=str(q_data.get("difficulty", "3")),
+                topic_id=THINKING_SKILLS_TOPIC_ID,
+                subtopic_id=subtopic_config.get("db_subtopic_id"),
                 subtopic_name=q_data.get("subtopic_name", subtopic_config["db_subtopic_name"]),
                 requires_image=q_data.get("requires_image", False),
                 image_description=q_data.get("image_description"),

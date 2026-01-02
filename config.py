@@ -16,7 +16,7 @@ class DatabaseConfig(BaseModel):
 
     @property
     def connection_string(self) -> str:
-        return f"postgresql://{self.user}:{self.password}@{self.host}:{self.port}/{self.name}"
+        return f"postgresql://{self.user}:{self.password}@{self.host}:{self.port}/{self.name}?sslmode=require"
 
 
 class GeminiConfig(BaseModel):

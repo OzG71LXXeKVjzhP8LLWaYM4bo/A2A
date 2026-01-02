@@ -99,14 +99,14 @@ class DatabaseAgent(BaseAgent):
                     # Convert choices to JSON
                     choices = json.dumps(q_data.get("choices", []))
 
-                    # Build insert query
+                    # Build insert query - matching n8n schema
                     query = """
                         INSERT INTO questionbank (
-                            id, content, question, choices, explanation,
-                            difficulty, subtopic_id, requires_image,
-                            image_description, image_url, tags, created_at
+                            id, question, content, choices, explanation, type,
+                            difficulty, topic_id, subtopic_ids, tags,
+                            showup, is_active, created_at
                         ) VALUES (
-                            $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12
+                            $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13
                         )
                         ON CONFLICT (id) DO UPDATE SET
                             content = EXCLUDED.content,
@@ -124,19 +124,28 @@ class DatabaseAgent(BaseAgent):
                             conn, q_data["subtopic_name"]
                         )
 
+                    # Convert subtopic_id to array for subtopic_ids column
+                    subtopic_ids = [subtopic_id] if subtopic_id else None
+
+                    # Get topic_id
+                    topic_id = q_data.get("topic_id")
+                    if isinstance(topic_id, str):
+                        topic_id = UUID(topic_id)
+
                     result = await conn.fetchval(
                         query,
                         UUID(question_id) if isinstance(question_id, str) else question_id,
-                        q_data.get("content"),
                         q_data["question"],
+                        q_data.get("content"),
                         choices,
                         q_data.get("explanation", ""),
-                        int(q_data.get("difficulty", 2)),
-                        subtopic_id,
-                        q_data.get("requires_image", False),
-                        q_data.get("image_description"),
-                        q_data.get("image_url"),
+                        q_data.get("type", "multiple-choice"),
+                        str(q_data.get("difficulty", "2")),
+                        topic_id,
+                        subtopic_ids,
                         q_data.get("tags", []),
+                        q_data.get("showup", True),
+                        q_data.get("is_active", True),
                         datetime.utcnow(),
                     )
                     inserted_ids.append(str(result))
@@ -179,12 +188,12 @@ class DatabaseAgent(BaseAgent):
                     exam_name = exam_data.get("name") or f"Exam {exam_code}"
                     exam_id = exam_data.get("id") or str(uuid4())
 
-                    # Insert exam
+                    # Insert exam - matching n8n schema with type and question_count
                     exam_query = """
                         INSERT INTO exams (
-                            id, code, name, description, time_limit,
-                            topic_id, created_at
-                        ) VALUES ($1, $2, $3, $4, $5, $6, $7)
+                            id, code, name, description, type, time_limit,
+                            question_count, topic_id, is_active, created_at
+                        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
                         RETURNING id
                     """
 
@@ -192,14 +201,20 @@ class DatabaseAgent(BaseAgent):
                     if isinstance(topic_id, str):
                         topic_id = UUID(topic_id)
 
+                    # Get question_count - either from exam_data or from question_ids length
+                    question_count = exam_data.get("question_count", len(question_ids))
+
                     result = await conn.fetchval(
                         exam_query,
                         UUID(exam_id) if isinstance(exam_id, str) else exam_id,
                         exam_code,
                         exam_name,
                         exam_data.get("description", ""),
+                        exam_data.get("type", "thinking-skills"),
                         exam_data.get("time_limit", 45),
+                        question_count,
                         topic_id,
+                        exam_data.get("is_active", True),
                         now,
                     )
                     exam_id = result
