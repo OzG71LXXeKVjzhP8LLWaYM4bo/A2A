@@ -21,19 +21,25 @@ class DatabaseConfig(BaseModel):
 
 class GeminiConfig(BaseModel):
     api_key: str = os.getenv("GEMINI_API_KEY", "")
+    # Use Gemini 2.0 Flash for fast text generation
     flash_model: str = "gemini-2.0-flash"
-    pro_model: str = "gemini-3-pro-preview"
-    image_model: str = "gemini-3-pro-image-preview"
+    # Use Gemini 2.5 Pro for complex reasoning
+    pro_model: str = "gemini-2.5-pro-preview-06-05"
+    # Use Imagen 3 for image generation
+    image_model: str = "imagen-3.0-generate-002"
 
 
 class AgentPorts(BaseModel):
     orchestrator: int = 5000
-    thinking_skills: int = 5001
     image: int = 5002
     database: int = 5003
     math: int = 5004
     reading: int = 5005
     verifier: int = 5006
+    # Pipeline agents (consolidated)
+    concept_guide: int = 5007
+    question_generator: int = 5008  # Merged: planner + realiser
+    quality_checker: int = 5009     # Merged: solver + adversarial + judge
 
 
 class R2Config(BaseModel):
@@ -50,14 +56,65 @@ class Config(BaseModel):
     ports: AgentPorts = AgentPorts()
     r2: R2Config = R2Config()
     prompts_dir: Path = Path(__file__).parent / "prompts"
+    data_dir: Path = Path(__file__).parent / "data"
 
-    # Topic UUIDs from n8n workflow
+    # Topic UUIDs from database
     topic_uuids: dict = {
         "reading": "8e64a8a1-126a-41d4-a8a1-40116970e9bc",
         "mathematics": "64cc2488-91f0-43e3-a560-b2bccf91442c",
         "thinking_skills": "096feb43-20f5-4ab7-8e3f-feb907884f9e",
         "writing": "f2a2bd14-b5bc-424c-990a-1f60d55cb506",
     }
+
+    # Thinking Skills subtopic UUIDs from database
+    thinking_skills_subtopics: dict = {
+        "analogies": {
+            "id": "fb7782d6-b227-48eb-a010-a6ea21c3e8df",
+            "name": "Analogies",
+            "display_name": "Conditional Logic",
+        },
+        "critical_thinking": {
+            "id": "b131ca12-b369-4823-a459-a389064dc7bf",
+            "name": "Critical Thinking",
+            "display_name": "Critical Thinking",
+        },
+        "deduction": {
+            "id": "81762f7f-019e-4834-a764-fc4a830a46db",
+            "name": "Deduction",
+            "display_name": "Deduction",
+        },
+        "inference": {
+            "id": "1b4015b7-8647-4229-afd2-0717ed2786ee",
+            "name": "Inference",
+            "display_name": "Inference",
+        },
+        "logical_reasoning": {
+            "id": "01915e09-31a5-4757-b666-0a3a8811b663",
+            "name": "Logical Reasoning",
+            "display_name": "Logical Reasoning",
+        },
+        "pattern_recognition": {
+            "id": "98d8d204-fd1e-431e-b689-f8198235a6bc",
+            "name": "Pattern Recognition",
+            "display_name": "Pattern Recognition",
+        },
+        "sequencing": {
+            "id": "40825bd0-994a-4e6e-8417-03aa359b45c6",
+            "name": "Sequencing",
+            "display_name": "Numerical Reasoning",
+        },
+        "spatial_reasoning": {
+            "id": "2c6553b7-29cd-4f4e-8291-4ee25921f8e0",
+            "name": "Spatial Reasoning",
+            "display_name": "Spatial Reasoning",
+        },
+    }
+
+    # Pipeline configuration
+    max_pipeline_retries: int = 3
+    min_quality_threshold: float = 0.7
+    min_solver_confidence: float = 0.9
+    min_adversarial_robustness: float = 0.7
 
 
 config = Config()

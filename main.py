@@ -2,7 +2,6 @@
 
 import asyncio
 import sys
-from typing import Optional
 
 import uvicorn
 
@@ -23,11 +22,6 @@ async def run_agent(agent_name: str):
         server = uvicorn.Server(uvicorn_config)
         await server.serve()
 
-    elif agent_name == "thinking_skills":
-        from agents.thinking_skills_agent import ThinkingSkillsAgent
-        agent = ThinkingSkillsAgent()
-        await agent.run()
-
     elif agent_name == "image":
         from agents.image_agent import ImageAgent
         agent = ImageAgent()
@@ -43,28 +37,53 @@ async def run_agent(agent_name: str):
         agent = VerifierAgent()
         await agent.run()
 
+    # Pipeline agents
+    elif agent_name == "concept_guide":
+        from agents.concept_guide_agent import ConceptGuideAgent
+        agent = ConceptGuideAgent()
+        await agent.run()
+
+    elif agent_name == "question_generator":
+        from agents.question_generator_agent import QuestionGeneratorAgent
+        agent = QuestionGeneratorAgent()
+        await agent.run()
+
+    elif agent_name == "quality_checker":
+        from agents.quality_checker_agent import QualityCheckerAgent
+        agent = QualityCheckerAgent()
+        await agent.run()
+
     else:
         print(f"Unknown agent: {agent_name}")
-        print("Available agents: orchestrator, thinking_skills, image, database, verifier")
+        print("Core: orchestrator, image, database, verifier")
+        print("Pipeline: concept_guide, question_generator, quality_checker")
         sys.exit(1)
 
 
 async def run_all():
     """Run all agents concurrently."""
     print("Starting all agents...")
-    print(f"  Orchestrator:      http://localhost:{config.ports.orchestrator}")
-    print(f"  Thinking Skills:   http://localhost:{config.ports.thinking_skills}")
-    print(f"  Image:             http://localhost:{config.ports.image}")
-    print(f"  Database:          http://localhost:{config.ports.database}")
-    print(f"  Verifier:          http://localhost:{config.ports.verifier}")
+    print()
+    print("Core agents:")
+    print(f"  Orchestrator:         http://localhost:{config.ports.orchestrator}")
+    print(f"  Image:                http://localhost:{config.ports.image}")
+    print(f"  Database:             http://localhost:{config.ports.database}")
+    print(f"  Verifier:             http://localhost:{config.ports.verifier}")
+    print()
+    print("Pipeline agents:")
+    print(f"  Concept Guide:        http://localhost:{config.ports.concept_guide}")
+    print(f"  Question Generator:   http://localhost:{config.ports.question_generator}")
+    print(f"  Quality Checker:      http://localhost:{config.ports.quality_checker}")
     print()
 
     tasks = [
         run_agent("orchestrator"),
-        run_agent("thinking_skills"),
         run_agent("image"),
         run_agent("database"),
         run_agent("verifier"),
+        run_agent("concept_guide"),
+        run_agent("question_generator"),
+        run_agent("quality_checker"),
     ]
 
     await asyncio.gather(*tasks)
@@ -75,13 +94,18 @@ def main():
     if len(sys.argv) < 2:
         print("Usage: python main.py <agent_name|all>")
         print()
-        print("Available agents:")
-        print("  orchestrator     - Main orchestrator with REST API (port 5000)")
-        print("  thinking_skills  - Thinking Skills question generator (port 5001)")
-        print("  image            - Image/diagram generator (port 5002)")
-        print("  database         - PostgreSQL database operations (port 5003)")
-        print("  verifier         - Question verification agent (port 5006)")
-        print("  all              - Run all agents concurrently")
+        print("Core agents:")
+        print(f"  orchestrator         - REST API + coordination (port {config.ports.orchestrator})")
+        print(f"  image                - Diagram generation (port {config.ports.image})")
+        print(f"  database             - PostgreSQL operations (port {config.ports.database})")
+        print(f"  verifier             - Question verification (port {config.ports.verifier})")
+        print()
+        print("Pipeline agents:")
+        print(f"  concept_guide        - Concept selection (port {config.ports.concept_guide})")
+        print(f"  question_generator   - Blueprint + question (port {config.ports.question_generator})")
+        print(f"  quality_checker      - Solve + attack + judge (port {config.ports.quality_checker})")
+        print()
+        print("  all                  - Run all 7 agents")
         sys.exit(1)
 
     agent_name = sys.argv[1].lower()

@@ -1,0 +1,137 @@
+{
+  "subtopic_id": "01915e09-31a5-4757-b666-0a3a8811b663",
+  "subtopic_name": "Logical Reasoning",
+  "display_name": "Logical Reasoning",
+  "topic_id": "096feb43-20f5-4ab7-8e3f-feb907884f9e",
+  "topic_name": "Thinking Skills",
+  "description": "Constraint satisfaction puzzles including ordering people/items, positioning, scheduling, and truth-teller/liar puzzles with multiple conditions.",
+  "typically_requires_image": false,
+  "concepts": [
+    {
+      "id": "linear-ordering",
+      "name": "Linear Ordering",
+      "description": "Arranging items or people in a sequence based on given constraints (taller than, before, to the left of)",
+      "difficulty_min": 1,
+      "difficulty_max": 3,
+      "bloom_levels": ["application", "analysis"],
+      "common_misconceptions": [
+        "Forgetting that 'between' means not at ends",
+        "Confusing 'before' with 'immediately before'",
+        "Not considering all possible arrangements"
+      ],
+      "question_patterns": [
+        "[List of constraints about order]. What is the correct sequence?",
+        "Given these rules, who is in position X?"
+      ],
+      "example_stems": [
+        "Alex is taller than Ben. Chris is shorter than Ben. Dana is taller than Alex. Order from shortest to tallest.",
+        "Red comes before blue. Green comes after blue. Yellow is not last. What's the order?"
+      ]
+    },
+    {
+      "id": "grid-placement",
+      "name": "Grid/Table Placement",
+      "description": "Placing items in a 2D grid or table based on row and column constraints",
+      "difficulty_min": 2,
+      "difficulty_max": 3,
+      "bloom_levels": ["application", "analysis"],
+      "common_misconceptions": [
+        "Confusing rows and columns",
+        "Not checking all constraints after placement",
+        "Missing 'not adjacent' constraints"
+      ],
+      "question_patterns": [
+        "Place items in the grid following these rules. What goes in position (X,Y)?",
+        "Who sits in which seat given these constraints?"
+      ],
+      "example_stems": [
+        "Place A, B, C, D in a 2x2 grid. A is not next to B. C is in the top row. D is in the left column.",
+        "Four students sit at a square table. Given these preferences, who sits where?"
+      ]
+    },
+    {
+      "id": "scheduling",
+      "name": "Scheduling Constraints",
+      "description": "Assigning events or activities to time slots while satisfying all conditions",
+      "difficulty_min": 2,
+      "difficulty_max": 3,
+      "bloom_levels": ["application", "analysis"],
+      "common_misconceptions": [
+        "Double-booking time slots",
+        "Ignoring 'must be before/after' constraints",
+        "Not checking for time conflicts"
+      ],
+      "question_patterns": [
+        "Schedule these activities. When does event X occur?",
+        "Given these timing constraints, what's the order of events?"
+      ],
+      "example_stems": [
+        "Art is before lunch. Math is after science. Science is at 10am. When is art?",
+        "Three meetings must happen today. Given constraints, what's the schedule?"
+      ]
+    },
+    {
+      "id": "truth-liar",
+      "name": "Truth-Teller and Liar Puzzles",
+      "description": "Determining who is telling truth and who is lying when each person makes a statement",
+      "difficulty_min": 2,
+      "difficulty_max": 3,
+      "bloom_levels": ["analysis", "evaluation"],
+      "common_misconceptions": [
+        "Not testing both possibilities systematically",
+        "Forgetting liars lie about everything",
+        "Not checking for consistency"
+      ],
+      "question_patterns": [
+        "Each person is either a truth-teller or liar. Who is telling the truth?",
+        "One person always lies, one always tells truth. What is the truth?"
+      ],
+      "example_stems": [
+        "Amy says 'Ben is lying.' Ben says 'Amy is lying.' One always lies. Who tells truth?",
+        "Three people make claims. At least one lies. Who is the liar?"
+      ]
+    },
+    {
+      "id": "matching",
+      "name": "Matching/Pairing Problems",
+      "description": "Matching items from one set to another based on given constraints",
+      "difficulty_min": 2,
+      "difficulty_max": 3,
+      "bloom_levels": ["application", "analysis"],
+      "common_misconceptions": [
+        "Making the same match twice",
+        "Not using process of elimination",
+        "Missing 'cannot be paired' constraints"
+      ],
+      "question_patterns": [
+        "Match each person to their item. Who has what?",
+        "Given these clues, pair the items correctly."
+      ],
+      "example_stems": [
+        "Three people each own one pet. Given clues, who owns the cat?",
+        "Match students to subjects based on these hints."
+      ]
+    },
+    {
+      "id": "process-elimination",
+      "name": "Process of Elimination",
+      "description": "Using given information to systematically rule out possibilities",
+      "difficulty_min": 1,
+      "difficulty_max": 3,
+      "bloom_levels": ["application", "analysis"],
+      "common_misconceptions": [
+        "Eliminating options too quickly without checking",
+        "Not keeping track of what's been eliminated",
+        "Missing indirect eliminations"
+      ],
+      "question_patterns": [
+        "Given these facts, what must be true?",
+        "Which option is the only one that satisfies all conditions?"
+      ],
+      "example_stems": [
+        "The answer is not A, not C, and is a vowel. What is it?",
+        "By elimination, which person fits all the criteria?"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,137 @@
+{
+  "subtopic_id": "b131ca12-b369-4823-a459-a389064dc7bf",
+  "subtopic_name": "Critical Thinking",
+  "display_name": "Critical Thinking",
+  "topic_id": "096feb43-20f5-4ab7-8e3f-feb907884f9e",
+  "topic_name": "Thinking Skills",
+  "description": "Evaluating arguments by identifying which statement most strengthens or weakens a given argument. Focus on evidence analysis and logical support.",
+  "typically_requires_image": false,
+  "concepts": [
+    {
+      "id": "strengthen-argument",
+      "name": "Strengthening an Argument",
+      "description": "Identifying evidence or statements that would make a conclusion more likely to be true",
+      "difficulty_min": 2,
+      "difficulty_max": 3,
+      "bloom_levels": ["analysis", "evaluation"],
+      "common_misconceptions": [
+        "Choosing evidence that is merely relevant but doesn't strengthen",
+        "Confusing explanation with strengthening",
+        "Selecting evidence that proves conclusion true rather than more likely"
+      ],
+      "question_patterns": [
+        "Which statement most strengthens the argument that [conclusion]?",
+        "What evidence would best support the claim?"
+      ],
+      "example_stems": [
+        "The park should be expanded because it will improve air quality. Which finding would strengthen this argument?",
+        "Scientists claim the medicine is effective. What would best support this?"
+      ]
+    },
+    {
+      "id": "weaken-argument",
+      "name": "Weakening an Argument",
+      "description": "Identifying evidence or statements that would make a conclusion less likely to be true",
+      "difficulty_min": 2,
+      "difficulty_max": 3,
+      "bloom_levels": ["analysis", "evaluation"],
+      "common_misconceptions": [
+        "Thinking any negative information weakens",
+        "Confusing attacking the person with attacking the argument",
+        "Choosing information that is irrelevant to the conclusion"
+      ],
+      "question_patterns": [
+        "Which statement most weakens the argument?",
+        "What would cast doubt on this conclusion?"
+      ],
+      "example_stems": [
+        "The new highway will reduce traffic. What finding would weaken this claim?",
+        "Early bedtimes improve grades. Which discovery would challenge this?"
+      ]
+    },
+    {
+      "id": "identify-assumption",
+      "name": "Identifying Underlying Assumptions",
+      "description": "Finding unstated beliefs that must be true for an argument to be valid",
+      "difficulty_min": 2,
+      "difficulty_max": 3,
+      "bloom_levels": ["analysis"],
+      "common_misconceptions": [
+        "Confusing assumptions with conclusions",
+        "Thinking stated premises are assumptions",
+        "Missing hidden logical gaps"
+      ],
+      "question_patterns": [
+        "What assumption does this argument rely on?",
+        "What must be true for this conclusion to follow?"
+      ],
+      "example_stems": [
+        "The candidate has experience, so they'll be effective. What assumption is made?",
+        "Reading improves vocabulary, so students should read more. What is assumed?"
+      ]
+    },
+    {
+      "id": "evaluate-evidence",
+      "name": "Evaluating Quality of Evidence",
+      "description": "Assessing whether evidence is relevant, reliable, and sufficient to support a claim",
+      "difficulty_min": 2,
+      "difficulty_max": 3,
+      "bloom_levels": ["evaluation"],
+      "common_misconceptions": [
+        "Accepting any evidence as equally valuable",
+        "Not considering sample size or bias",
+        "Confusing correlation with causation"
+      ],
+      "question_patterns": [
+        "Which evidence best supports the conclusion?",
+        "What is the strongest piece of evidence for [claim]?"
+      ],
+      "example_stems": [
+        "Which study design would best test the claim?",
+        "What evidence would most convincingly prove the theory?"
+      ]
+    },
+    {
+      "id": "identify-flaw",
+      "name": "Identifying Logical Flaws",
+      "description": "Recognizing errors in reasoning such as false cause, hasty generalization, or circular reasoning",
+      "difficulty_min": 2,
+      "difficulty_max": 3,
+      "bloom_levels": ["analysis", "evaluation"],
+      "common_misconceptions": [
+        "Not recognizing common fallacy patterns",
+        "Confusing weak arguments with flawed arguments",
+        "Missing the specific flaw in reasoning"
+      ],
+      "question_patterns": [
+        "What is the flaw in this reasoning?",
+        "Why is this argument weak?"
+      ],
+      "example_stems": [
+        "After the new CEO started, profits rose. The CEO must have improved profits. What's the flaw?",
+        "Most successful people wake up early. To succeed, wake up early. What's wrong with this reasoning?"
+      ]
+    },
+    {
+      "id": "counter-argument",
+      "name": "Constructing Counter-Arguments",
+      "description": "Developing alternative explanations or objections that challenge a given argument",
+      "difficulty_min": 3,
+      "difficulty_max": 3,
+      "bloom_levels": ["synthesis", "evaluation"],
+      "common_misconceptions": [
+        "Simply denying the conclusion without providing reasoning",
+        "Attacking irrelevant aspects",
+        "Not addressing the actual argument"
+      ],
+      "question_patterns": [
+        "What is the best counter-argument to this claim?",
+        "How might someone challenge this conclusion?"
+      ],
+      "example_stems": [
+        "The program reduced crime, so it should continue. What's the best objection?",
+        "Homework improves learning. What would challenge this?"
+      ]
+    }
+  ]
+}

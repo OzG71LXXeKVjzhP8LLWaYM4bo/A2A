@@ -1,0 +1,138 @@
+{
+  "subtopic_id": "fb7782d6-b227-48eb-a010-a6ea21c3e8df",
+  "subtopic_name": "Analogies",
+  "display_name": "Conditional Logic",
+  "topic_id": "096feb43-20f5-4ab7-8e3f-feb907884f9e",
+  "topic_name": "Thinking Skills",
+  "description": "If-then reasoning, contrapositive logic, necessary conclusions from conditional statements, and determining what must be true based on given premises.",
+  "typically_requires_image": false,
+  "concepts": [
+    {
+      "id": "if-then-basic",
+      "name": "Basic If-Then Reasoning",
+      "description": "Understanding that 'If A then B' means whenever A is true, B must be true",
+      "difficulty_min": 1,
+      "difficulty_max": 2,
+      "bloom_levels": ["comprehension", "application"],
+      "common_misconceptions": [
+        "Thinking 'If A then B' means 'If B then A' (converse error)",
+        "Assuming A must be true if B is true",
+        "Confusing 'if' with 'only if'"
+      ],
+      "question_patterns": [
+        "If [condition], then [result]. Given [condition], what must be true?",
+        "Which conclusion follows from: If [A] then [B]?"
+      ],
+      "example_stems": [
+        "If it rains, the ground gets wet. It is raining. What must be true?",
+        "All dogs are mammals. Spot is a dog. What can we conclude?"
+      ]
+    },
+    {
+      "id": "contrapositive",
+      "name": "Contrapositive Reasoning",
+      "description": "Understanding that 'If A then B' is logically equivalent to 'If not B then not A'",
+      "difficulty_min": 2,
+      "difficulty_max": 3,
+      "bloom_levels": ["application", "analysis"],
+      "common_misconceptions": [
+        "Confusing contrapositive with converse",
+        "Thinking 'If not A then not B' is valid (inverse error)",
+        "Not recognizing the contrapositive as logically equivalent"
+      ],
+      "question_patterns": [
+        "If [A] then [B]. [Not B] is true. What must be true?",
+        "Which statement is logically equivalent to: If [A] then [B]?"
+      ],
+      "example_stems": [
+        "If a student passes, they studied. Tom did not study. What can we conclude?",
+        "All squares are rectangles. This shape is not a rectangle. What follows?"
+      ]
+    },
+    {
+      "id": "chain-reasoning",
+      "name": "Chain of Conditional Reasoning",
+      "description": "Linking multiple conditional statements: If A then B, If B then C, therefore If A then C",
+      "difficulty_min": 2,
+      "difficulty_max": 3,
+      "bloom_levels": ["application", "analysis"],
+      "common_misconceptions": [
+        "Reversing the chain direction",
+        "Missing intermediate steps",
+        "Assuming chains work backwards"
+      ],
+      "question_patterns": [
+        "If [A] then [B]. If [B] then [C]. Given [A], what must be true?",
+        "Following the chain of rules, what conclusion can be drawn?"
+      ],
+      "example_stems": [
+        "If it's Monday, I go to school. If I go to school, I take the bus. It's Monday. What follows?",
+        "All cats are mammals. All mammals are warm-blooded. Whiskers is a cat. What must be true?"
+      ]
+    },
+    {
+      "id": "necessary-vs-sufficient",
+      "name": "Necessary vs Sufficient Conditions",
+      "description": "Distinguishing between conditions that are required (necessary) and conditions that guarantee a result (sufficient)",
+      "difficulty_min": 3,
+      "difficulty_max": 3,
+      "bloom_levels": ["analysis", "evaluation"],
+      "common_misconceptions": [
+        "Treating sufficient conditions as necessary",
+        "Treating necessary conditions as sufficient",
+        "Not understanding 'only if' as stating necessity"
+      ],
+      "question_patterns": [
+        "What is a necessary condition for [outcome]?",
+        "What is sufficient to guarantee [outcome]?",
+        "[A] only if [B] means what?"
+      ],
+      "example_stems": [
+        "You can vote only if you are 18 or older. Sam is 18. Can Sam vote?",
+        "Being a square is sufficient for being a rectangle. Is it necessary?"
+      ]
+    },
+    {
+      "id": "logical-equivalence",
+      "name": "Logical Equivalence",
+      "description": "Identifying statements that have the same truth value in all situations",
+      "difficulty_min": 2,
+      "difficulty_max": 3,
+      "bloom_levels": ["analysis"],
+      "common_misconceptions": [
+        "Thinking similar-sounding statements are equivalent",
+        "Not recognizing De Morgan's laws",
+        "Confusing equivalence with implication"
+      ],
+      "question_patterns": [
+        "Which statement means the same as: [statement]?",
+        "Which of the following is logically equivalent?"
+      ],
+      "example_stems": [
+        "Which statement is equivalent to 'Not all birds can fly'?",
+        "If it's not raining, I walk. Which statement means the same?"
+      ]
+    },
+    {
+      "id": "multiple-premises",
+      "name": "Reasoning from Multiple Premises",
+      "description": "Drawing conclusions when given multiple conditional statements that must all be considered",
+      "difficulty_min": 2,
+      "difficulty_max": 3,
+      "bloom_levels": ["analysis", "synthesis"],
+      "common_misconceptions": [
+        "Only using some premises and ignoring others",
+        "Drawing conclusions that don't follow from all premises",
+        "Assuming more than what is stated"
+      ],
+      "question_patterns": [
+        "Given all of the following, what must be true?",
+        "Based on these rules, what can we conclude?"
+      ],
+      "example_stems": [
+        "All A are B. All B are C. Some C are D. What must be true about A?",
+        "If it's sunny, we go to the beach. If it's Saturday, we have time. It's a sunny Saturday. What follows?"
+      ]
+    }
+  ]
+}

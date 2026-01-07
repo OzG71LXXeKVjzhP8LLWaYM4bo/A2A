@@ -36,10 +36,22 @@ class DatabaseAgent(BaseAgent):
                     "tags": ["database", "exam"],
                 },
                 {
+                    "id": "add_exam_to_pack",
+                    "name": "Add Exam to Pack",
+                    "description": "Link an exam to an exam pack",
+                    "tags": ["database", "exam", "pack"],
+                },
+                {
                     "id": "get_subtopics",
                     "name": "Get Subtopics",
                     "description": "Fetch subtopics for a topic",
                     "tags": ["database", "query"],
+                },
+                {
+                    "id": "get_exam_packs",
+                    "name": "Get Exam Packs",
+                    "description": "Fetch available exam packs",
+                    "tags": ["database", "query", "pack"],
                 },
             ],
         )
@@ -79,8 +91,15 @@ class DatabaseAgent(BaseAgent):
                 exam_data=task_data.get("exam", {}),
                 question_ids=task_data.get("question_ids", []),
             )
+        elif action == "add_exam_to_pack":
+            return await self.add_exam_to_pack(
+                exam_id=task_data.get("exam_id"),
+                pack_id=task_data.get("pack_id"),
+            )
         elif action == "get_subtopics":
             return await self.get_subtopics(task_data.get("topic_id"))
+        elif action == "get_exam_packs":
+            return await self.get_exam_packs()
         else:
             return {"error": f"Unknown action: {action}"}
 
@@ -99,20 +118,23 @@ class DatabaseAgent(BaseAgent):
                     # Convert choices to JSON
                     choices = json.dumps(q_data.get("choices", []))
 
-                    # Build insert query - matching n8n schema
+                    # Build insert query - matching n8n schema with all question type fields
                     query = """
                         INSERT INTO questionbank (
                             id, question, content, choices, explanation, type,
                             difficulty, topic_id, subtopic_ids, tags,
-                            showup, is_active, created_at
+                            showup, is_active, max_positions, marking_criteria, created_at
                         ) VALUES (
-                            $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13
+                            $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15
                         )
                         ON CONFLICT (id) DO UPDATE SET
                             content = EXCLUDED.content,
                             question = EXCLUDED.question,
                             choices = EXCLUDED.choices,
                             explanation = EXCLUDED.explanation,
+                            type = EXCLUDED.type,
+                            max_positions = EXCLUDED.max_positions,
+                            marking_criteria = EXCLUDED.marking_criteria,
                             updated_at = NOW()
                         RETURNING id
                     """
@@ -132,6 +154,11 @@ class DatabaseAgent(BaseAgent):
                     if isinstance(topic_id, str):
                         topic_id = UUID(topic_id)
 
+                    # Prepare marking_criteria as JSON if present
+                    marking_criteria = q_data.get("marking_criteria")
+                    if marking_criteria:
+                        marking_criteria = json.dumps(marking_criteria)
+
                     result = await conn.fetchval(
                         query,
                         UUID(question_id) if isinstance(question_id, str) else question_id,
@@ -146,6 +173,8 @@ class DatabaseAgent(BaseAgent):
                         q_data.get("tags", []),
                         q_data.get("showup", True),
                         q_data.get("is_active", True),
+                        q_data.get("max_positions"),  # For drag-and-drop
+                        marking_criteria,  # For writing questions
                         datetime.utcnow(),
                     )
                     inserted_ids.append(str(result))
@@ -246,6 +275,62 @@ class DatabaseAgent(BaseAgent):
                         "error": str(e),
                     }
 
+    async def add_exam_to_pack(
+        self,
+        exam_id: str,
+        pack_id: str,
+    ) -> dict:
+        """Add an exam to an exam pack."""
+        if not exam_id or not pack_id:
+            return {"success": False, "error": "exam_id and pack_id are required"}
+
+        pool = await self.get_pool()
+
+        async with pool.acquire() as conn:
+            try:
+                # Get current max order in the pack
+                order_query = """
+                    SELECT COALESCE(MAX(exam_order), 0) + 1 as next_order
+                    FROM exam_pack_exams
+                    WHERE exam_pack_id = $1
+                """
+                next_order = await conn.fetchval(order_query, UUID(pack_id))
+
+                # Insert the exam into the pack
+                insert_query = """
+                    INSERT INTO exam_pack_exams (exam_pack_id, exam_id, exam_order)
+                    VALUES ($1, $2, $3)
+                    ON CONFLICT (exam_pack_id, exam_id) DO NOTHING
+                    RETURNING id
+                """
+                result = await conn.fetchval(
+                    insert_query,
+                    UUID(pack_id),
+                    UUID(exam_id),
+                    next_order,
+                )
+
+                if result:
+                    return {
+                        "success": True,
+                        "exam_id": exam_id,
+                        "pack_id": pack_id,
+                        "exam_order": next_order,
+                    }
+                else:
+                    return {
+                        "success": True,
+                        "message": "Exam already in pack",
+                        "exam_id": exam_id,
+                        "pack_id": pack_id,
+                    }
+
+            except Exception as e:
+                return {
+                    "success": False,
+                    "error": str(e),
+                }
+
     async def get_subtopics(self, topic_id: Optional[str] = None) -> dict:
         """Fetch subtopics, optionally filtered by topic."""
         pool = await self.get_pool()
@@ -282,6 +367,52 @@ class DatabaseAgent(BaseAgent):
                     "success": True,
                     "subtopics": subtopics,
                     "count": len(subtopics),
+                }
+
+            except Exception as e:
+                return {
+                    "success": False,
+                    "error": str(e),
+                }
+
+    async def get_exam_packs(self) -> dict:
+        """Fetch available exam packs."""
+        pool = await self.get_pool()
+
+        async with pool.acquire() as conn:
+            try:
+                query = """
+                    SELECT
+                        ep.id,
+                        ep.name,
+                        ep.description,
+                        ep.is_active,
+                        ep.release_date,
+                        COUNT(epe.exam_id) as exam_count
+                    FROM exam_packs ep
+                    LEFT JOIN exam_pack_exams epe ON ep.id = epe.exam_pack_id
+                    WHERE ep.is_active = true
+                    GROUP BY ep.id
+                    ORDER BY ep.name
+                """
+                rows = await conn.fetch(query)
+
+                packs = [
+                    {
+                        "id": str(row["id"]),
+                        "name": row["name"],
+                        "description": row["description"],
+                        "is_active": row["is_active"],
+                        "release_date": row["release_date"].isoformat() if row["release_date"] else None,
+                        "exam_count": row["exam_count"],
+                    }
+                    for row in rows
+                ]
+
+                return {
+                    "success": True,
+                    "packs": packs,
+                    "count": len(packs),
                 }
 
             except Exception as e:

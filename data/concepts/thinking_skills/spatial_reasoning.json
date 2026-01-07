@@ -1,0 +1,159 @@
+{
+  "subtopic_id": "2c6553b7-29cd-4f4e-8291-4ee25921f8e0",
+  "subtopic_name": "Spatial Reasoning",
+  "display_name": "Spatial Reasoning",
+  "topic_id": "096feb43-20f5-4ab7-8e3f-feb907884f9e",
+  "topic_name": "Thinking Skills",
+  "description": "Visual puzzles involving shape fitting, puzzle completion, perspective views (top/side/front), and pattern matching with tiles.",
+  "typically_requires_image": true,
+  "image_types": ["3d_shape", "2d_view", "isometric", "orthographic", "tile_pattern", "shape_fitting"],
+  "concepts": [
+    {
+      "id": "3d-to-2d-views",
+      "name": "3D to 2D Projection",
+      "description": "Identifying what a 3D shape looks like from different viewing angles (top, front, side)",
+      "difficulty_min": 2,
+      "difficulty_max": 3,
+      "bloom_levels": ["application", "analysis"],
+      "common_misconceptions": [
+        "Confusing front and back views",
+        "Forgetting hidden surfaces",
+        "Mixing up top and side views"
+      ],
+      "question_patterns": [
+        "What does this 3D shape look like from above?",
+        "Which is the correct [front/top/side] view?"
+      ],
+      "example_stems": [
+        "This cube arrangement shows [shape]. What is the view from the front?",
+        "Looking down at this structure, which outline do you see?"
+      ]
+    },
+    {
+      "id": "2d-to-3d-construction",
+      "name": "2D to 3D Construction",
+      "description": "Given 2D views, determining what 3D shape they represent",
+      "difficulty_min": 2,
+      "difficulty_max": 3,
+      "bloom_levels": ["synthesis", "analysis"],
+      "common_misconceptions": [
+        "Not integrating multiple views correctly",
+        "Missing cubes hidden behind others",
+        "Incorrect depth perception"
+      ],
+      "question_patterns": [
+        "Given these views, which 3D shape is shown?",
+        "Which structure has these top, front, and side views?"
+      ],
+      "example_stems": [
+        "The top view is [shape], front view is [shape]. Which 3D structure is this?",
+        "Combining these three views, how many cubes are in the structure?"
+      ]
+    },
+    {
+      "id": "cube-counting",
+      "name": "Cube Counting",
+      "description": "Counting the number of unit cubes in a 3D arrangement",
+      "difficulty_min": 1,
+      "difficulty_max": 3,
+      "bloom_levels": ["application"],
+      "common_misconceptions": [
+        "Missing hidden cubes",
+        "Double-counting visible faces",
+        "Not accounting for cubes behind others"
+      ],
+      "question_patterns": [
+        "How many cubes are in this structure?",
+        "How many cubes are hidden from view?"
+      ],
+      "example_stems": [
+        "This arrangement shows cubes stacked. How many cubes in total?",
+        "Looking at this structure, how many cubes can't you see?"
+      ]
+    },
+    {
+      "id": "net-folding",
+      "name": "Net Folding",
+      "description": "Determining what 3D shape results when a 2D net is folded",
+      "difficulty_min": 2,
+      "difficulty_max": 3,
+      "bloom_levels": ["application", "analysis"],
+      "common_misconceptions": [
+        "Incorrectly tracking which faces become adjacent",
+        "Forgetting how patterns/letters transform when folded",
+        "Misjudging opposite faces"
+      ],
+      "question_patterns": [
+        "Which cube can be made from this net?",
+        "When folded, which faces are opposite?"
+      ],
+      "example_stems": [
+        "This net has letters on each face. Which cube shows the correct arrangement?",
+        "Fold this net. Which pattern appears on the top when [face] is the base?"
+      ]
+    },
+    {
+      "id": "rotation-reflection",
+      "name": "Rotation and Reflection",
+      "description": "Identifying shapes after rotation or reflection transformations",
+      "difficulty_min": 1,
+      "difficulty_max": 3,
+      "bloom_levels": ["application"],
+      "common_misconceptions": [
+        "Confusing rotation with reflection",
+        "Incorrectly determining rotation angle",
+        "Not accounting for direction of rotation"
+      ],
+      "question_patterns": [
+        "Which shape shows the original rotated 90° clockwise?",
+        "Which is the reflection of this shape?"
+      ],
+      "example_stems": [
+        "Rotate this L-shape 180°. What does it look like?",
+        "Reflect this arrow across the vertical line. Which option shows the result?"
+      ]
+    },
+    {
+      "id": "shape-fitting",
+      "name": "Shape Fitting and Puzzles",
+      "description": "Determining which piece completes a puzzle or fits into a given space",
+      "difficulty_min": 1,
+      "difficulty_max": 3,
+      "bloom_levels": ["application"],
+      "common_misconceptions": [
+        "Not checking all edges for fit",
+        "Ignoring pattern continuity",
+        "Forgetting rotation might help a piece fit"
+      ],
+      "question_patterns": [
+        "Which piece completes the puzzle?",
+        "Which shape fits exactly into the gap?"
+      ],
+      "example_stems": [
+        "The puzzle is missing one piece. Which option completes it?",
+        "Which shape can be placed to make a rectangle?"
+      ]
+    },
+    {
+      "id": "pattern-completion",
+      "name": "Pattern Completion",
+      "description": "Identifying the missing section of a pattern based on symmetry or repetition",
+      "difficulty_min": 2,
+      "difficulty_max": 3,
+      "bloom_levels": ["analysis"],
+      "common_misconceptions": [
+        "Missing rotational symmetry",
+        "Not identifying the repeat unit",
+        "Ignoring color or shading patterns"
+      ],
+      "question_patterns": [
+        "Which piece completes the symmetric pattern?",
+        "What should go in the missing section?"
+      ],
+      "example_stems": [
+        "This pattern has 4-fold symmetry. What goes in the blank quadrant?",
+        "The design repeats. Which tile fills the gap?"
+      ]
+    }
+  ]
+}

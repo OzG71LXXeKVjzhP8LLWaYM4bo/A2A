@@ -446,16 +446,25 @@
             color: white;
         }
         .question-content {
-            background: var(--bg-tertiary);
-            padding: 15px;
-            border-radius: 5px;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        /* NSW Exam style box for premises */
+        .question-content > div[style*="border"] {
+            background: var(--bg-secondary);
             margin-bottom: 15px;
-            border-left: 4px solid var(--accent-green);
+        }
+        .question-content p {
+            margin: 8px 0;
+        }
+        .question-content strong {
+            color: var(--accent-blue);
         }
         .question-text {
             font-size: 16px;
             line-height: 1.6;
             margin-bottom: 15px;
+            font-weight: 500;
         }
 
         /* Image display */
@@ -571,12 +580,16 @@
             border-radius: 5px;
             margin-top: 15px;
             border-left: 4px solid var(--accent-orange);
+            line-height: 1.6;
         }
         [data-theme="dark"] .explanation {
             background: #3d2f1a;
         }
         .explanation.show {
             display: block;
+        }
+        .explanation strong {
+            color: var(--accent-green);
         }
         .explanation-title {
             font-weight: bold;
@@ -803,28 +816,36 @@
             <h2>Configure Your Exam</h2>
             <div class="config-grid">
                 <div class="config-item">
-                    <label>Analogies</label>
-                    <input type="number" id="analogies" value="2" min="0" max="10">
+                    <label>Analogies (Conditional Logic)</label>
+                    <input type="number" id="analogies" value="4" min="0" max="15">
                 </div>
                 <div class="config-item">
                     <label>Logical Reasoning</label>
-                    <input type="number" id="logical_reasoning" value="2" min="0" max="10">
+                    <input type="number" id="logical_reasoning" value="5" min="0" max="15">
                 </div>
                 <div class="config-item">
                     <label>Pattern Recognition</label>
-                    <input type="number" id="pattern_recognition" value="2" min="0" max="10">
+                    <input type="number" id="pattern_recognition" value="5" min="0" max="15">
+                </div>
+                <div class="config-item">
+                    <label>Spatial Reasoning</label>
+                    <input type="number" id="spatial_reasoning" value="4" min="0" max="15">
                 </div>
                 <div class="config-item">
                     <label>Deduction</label>
-                    <input type="number" id="deduction" value="2" min="0" max="10">
+                    <input type="number" id="deduction" value="5" min="0" max="15">
                 </div>
                 <div class="config-item">
                     <label>Inference</label>
-                    <input type="number" id="inference" value="2" min="0" max="10">
+                    <input type="number" id="inference" value="4" min="0" max="15">
                 </div>
                 <div class="config-item">
-                    <label>Sequencing</label>
-                    <input type="number" id="sequencing" value="0" min="0" max="10">
+                    <label>Sequencing (Numerical)</label>
+                    <input type="number" id="sequencing" value="4" min="0" max="15">
+                </div>
+                <div class="config-item">
+                    <label>Critical Thinking</label>
+                    <input type="number" id="critical_thinking" value="4" min="0" max="15">
                 </div>
             </div>
 
@@ -1121,9 +1142,11 @@
                 analogies: parseInt(document.getElementById('analogies').value) || 0,
                 logical_reasoning: parseInt(document.getElementById('logical_reasoning').value) || 0,
                 pattern_recognition: parseInt(document.getElementById('pattern_recognition').value) || 0,
+                spatial_reasoning: parseInt(document.getElementById('spatial_reasoning').value) || 0,
                 deduction: parseInt(document.getElementById('deduction').value) || 0,
                 inference: parseInt(document.getElementById('inference').value) || 0,
                 sequencing: parseInt(document.getElementById('sequencing').value) || 0,
+                critical_thinking: parseInt(document.getElementById('critical_thinking').value) || 0,
             };
 
             const enableImages = document.getElementById('enableImages').checked;
@@ -1148,68 +1171,70 @@
             currentQuestion = 1;
 
             let questionNum = 1;
-            const subtopics = Object.entries(config).filter(([_, count]) => count > 0);
 
-            for (const [subtopic, count] of subtopics) {
-                document.getElementById('loadingText').textContent = `Generating ${subtopic.replace('_', ' ')} questions...`;
-
-                try {
-                    const response = await fetch('http://localhost:5001/', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            jsonrpc: '2.0',
-                            method: 'message/send',
-                            id: Date.now(),
-                            params: {
-                                message: {
-                                    role: 'user',
-                                    messageId: crypto.randomUUID(),
-                                    parts: [{
-                                        type: 'text',
-                                        text: JSON.stringify({
-                                            action: 'generate_questions',
-                                            subtopic: subtopic,
-                                            count: count,
-                                            enable_images: enableImages
-                                        })
-                                    }]
-                                }
-                            }
-                        })
-                    });
-
-                    const data = await response.json();
-                    // Handle both streaming and non-streaming response formats
-                    const resultText = data.result?.status?.message?.parts?.[0]?.text
-                        || data.result?.artifacts?.[0]?.parts?.[0]?.text
-                        || '{}';
-                    const result = JSON.parse(resultText);
-
-                    if (result.questions) {
-                        for (const q of result.questions) {
-                            examData.push({
-                                number: questionNum++,
-                                subtopic: subtopic,
-                                content: q.content,
-                                question: q.question,
-                                choices: q.choices,
-                                explanation: q.explanation,
-                                correctAnswer: q.choices.find(c => c.is_correct)?.id,
-                                image_url: q.image_url || null
-                            });
-                        }
-                    }
-                } catch (error) {
-                    console.error(`Error generating ${subtopic}:`, error);
-                    showStatus(`Error connecting to server. Make sure the agents are running (uv run python main.py all)`, 'error');
-                    document.getElementById('loading').classList.remove('active');
-                    document.getElementById('configPanel').style.display = 'block';
-                    document.getElementById('generateBtn').disabled = false;
-                    return;
+            // Build subtopic_questions config for the orchestrator
+            const subtopic_questions = {};
+            for (const [subtopic, count] of Object.entries(config)) {
+                if (count > 0) {
+                    subtopic_questions[subtopic] = count;
                 }
+            }
+
+            document.getElementById('loadingText').textContent = `Generating ${Object.values(subtopic_questions).reduce((a,b)=>a+b,0)} questions via pipeline...`;
+
+            try {
+                const response = await fetch('http://localhost:5000/api/exams/thinking-skills', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        subtopic_questions: subtopic_questions,
+                        total_questions: Object.values(subtopic_questions).reduce((a, b) => a + b, 0),
+                        difficulty: 3,
+                        enable_images: enableImages
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                const result = await response.json();
+
+                if (result.questions) {
+                    for (const q of result.questions) {
+                        // Extract subtopic from tags or use 'unknown'
+                        const subtopic = q.tags?.find(t => t !== 'Thinking Skills')?.toLowerCase().replace(/ /g, '_') || 'unknown';
+
+                        // Find correct answer - it's always id="1" from the pipeline
+                        const correctId = q.correct_answer_id || '1';
+
+                        examData.push({
+                            number: questionNum++,
+                            subtopic: subtopic,
+                            // content is the HTML box with premise + character statements
+                            content: typeof q.content === 'string' ? q.content : (q.content?.explanation || ''),
+                            question: q.question,
+                            choices: q.choices.map(c => ({
+                                id: c.id,
+                                text: c.text,
+                                is_correct: c.id === correctId
+                            })),
+                            explanation: q.explanation || 'No explanation available.',
+                            correctAnswer: correctId,
+                            image_url: q.image_url || null,
+                            image_description: q.image_description || null
+                        });
+                    }
+                }
+            } catch (error) {
+                console.error('Error generating exam:', error);
+                showStatus(`Error: ${error.message}. Make sure agents are running (uv run python main.py all)`, 'error');
+                document.getElementById('loading').classList.remove('active');
+                document.getElementById('configPanel').style.display = 'block';
+                document.getElementById('generateBtn').disabled = false;
+                return;
             }
 
             // Shuffle if enabled

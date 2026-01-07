@@ -1,0 +1,138 @@
+{
+  "subtopic_id": "98d8d204-fd1e-431e-b689-f8198235a6bc",
+  "subtopic_name": "Pattern Recognition",
+  "display_name": "Pattern Recognition",
+  "topic_id": "096feb43-20f5-4ab7-8e3f-feb907884f9e",
+  "topic_name": "Thinking Skills",
+  "description": "Code-breaking, faulty display problems, digit sequences, and deciphering coded messages. Visual pattern matching with tiles and shapes.",
+  "typically_requires_image": true,
+  "image_types": ["digit_display", "code_grid", "tile_pattern", "symbol_sequence"],
+  "concepts": [
+    {
+      "id": "number-sequence",
+      "name": "Number Sequence Patterns",
+      "description": "Identifying the rule governing a sequence of numbers and predicting the next term",
+      "difficulty_min": 1,
+      "difficulty_max": 3,
+      "bloom_levels": ["application", "analysis"],
+      "common_misconceptions": [
+        "Looking only at differences, not at ratios or other patterns",
+        "Not considering alternating or compound patterns",
+        "Missing that the pattern might involve multiple operations"
+      ],
+      "question_patterns": [
+        "What is the next number in the sequence: [numbers]?",
+        "Which number completes the pattern?"
+      ],
+      "example_stems": [
+        "2, 4, 8, 16, __. What comes next?",
+        "1, 1, 2, 3, 5, 8, __. Find the pattern and the next term."
+      ]
+    },
+    {
+      "id": "letter-code",
+      "name": "Letter/Symbol Codes",
+      "description": "Deciphering coded messages where letters or symbols represent other letters",
+      "difficulty_min": 2,
+      "difficulty_max": 3,
+      "bloom_levels": ["application", "analysis"],
+      "common_misconceptions": [
+        "Not checking if the code is consistent throughout",
+        "Missing shift patterns (like Caesar cipher)",
+        "Not considering reverse alphabets"
+      ],
+      "question_patterns": [
+        "If [coded word] means [real word], what does [coded word] mean?",
+        "Using the code, translate [message]."
+      ],
+      "example_stems": [
+        "If APPLE is coded as BQQMF, what is GRAPE coded as?",
+        "Using the given substitution, decode the message."
+      ]
+    },
+    {
+      "id": "faulty-display",
+      "name": "Faulty Display Problems",
+      "description": "Determining what number or letter is shown when segments of a digital display are broken",
+      "difficulty_min": 2,
+      "difficulty_max": 3,
+      "bloom_levels": ["application", "analysis"],
+      "common_misconceptions": [
+        "Not considering which segments could be faulty",
+        "Forgetting that multiple digits might have the same faulty segment",
+        "Not checking all possibilities"
+      ],
+      "question_patterns": [
+        "If segment X is always off, what number is actually displayed?",
+        "Which display shows the correct time if [segments] are broken?"
+      ],
+      "example_stems": [
+        "The middle segment never lights up. What number could this be showing?",
+        "If the top segment is broken, which digits could appear as which?"
+      ]
+    },
+    {
+      "id": "matrix-pattern",
+      "name": "Matrix/Grid Patterns",
+      "description": "Finding the pattern in a 2D grid and determining missing elements",
+      "difficulty_min": 2,
+      "difficulty_max": 3,
+      "bloom_levels": ["analysis"],
+      "common_misconceptions": [
+        "Looking only at rows, not columns",
+        "Not checking diagonals",
+        "Missing compound row+column patterns"
+      ],
+      "question_patterns": [
+        "What symbol belongs in the empty cell?",
+        "Complete the grid following the pattern."
+      ],
+      "example_stems": [
+        "In this 3x3 grid, what goes in the center?",
+        "Each row and column follows a rule. Find the missing element."
+      ]
+    },
+    {
+      "id": "shape-transformation",
+      "name": "Shape Transformation Sequences",
+      "description": "Identifying how shapes change from one step to the next (rotation, reflection, color change)",
+      "difficulty_min": 2,
+      "difficulty_max": 3,
+      "bloom_levels": ["analysis"],
+      "common_misconceptions": [
+        "Confusing clockwise and counter-clockwise rotation",
+        "Missing that multiple transformations might occur",
+        "Not noticing color or shading changes"
+      ],
+      "question_patterns": [
+        "What comes next in the sequence?",
+        "Which shape follows the pattern?"
+      ],
+      "example_stems": [
+        "The shape rotates 90° each step. What's next?",
+        "Each step adds a side and changes color. What's step 4?"
+      ]
+    },
+    {
+      "id": "analogy-pattern",
+      "name": "Visual Analogies",
+      "description": "Finding the relationship between two shapes and applying it to a new pair",
+      "difficulty_min": 2,
+      "difficulty_max": 3,
+      "bloom_levels": ["analysis", "application"],
+      "common_misconceptions": [
+        "Focusing on superficial similarity",
+        "Not identifying the exact transformation",
+        "Missing relationships like 'part to whole'"
+      ],
+      "question_patterns": [
+        "[Shape A] is to [Shape B] as [Shape C] is to ___?",
+        "What completes the analogy?"
+      ],
+      "example_stems": [
+        "Square is to cube as circle is to ___?",
+        "If the first pair shows doubling, what completes the second pair?"
+      ]
+    }
+  ]
+}

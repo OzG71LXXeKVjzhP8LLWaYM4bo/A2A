@@ -1,0 +1,138 @@
+{
+  "subtopic_id": "1b4015b7-8647-4229-afd2-0717ed2786ee",
+  "subtopic_name": "Inference",
+  "display_name": "Inference",
+  "topic_id": "096feb43-20f5-4ab7-8e3f-feb907884f9e",
+  "topic_name": "Thinking Skills",
+  "description": "Identifying reasoning errors where a person makes a flawed logical conclusion. Questions ask which sentence shows the mistake they have made.",
+  "typically_requires_image": true,
+  "image_types": ["character_portrait", "single_person"],
+  "concepts": [
+    {
+      "id": "identify-reasoning-error",
+      "name": "Identifying the Reasoning Error",
+      "description": "Finding which specific step or conclusion in a person's reasoning contains the logical mistake",
+      "difficulty_min": 2,
+      "difficulty_max": 3,
+      "bloom_levels": ["analysis", "evaluation"],
+      "common_misconceptions": [
+        "Identifying a false statement rather than the flawed reasoning",
+        "Not distinguishing between incorrect facts and invalid logic",
+        "Missing where the error actually occurs in the chain"
+      ],
+      "question_patterns": [
+        "[Person] reasons as follows: [chain of reasoning]. Which sentence shows their mistake?",
+        "At which step does [person]'s reasoning go wrong?"
+      ],
+      "example_stems": [
+        "Tom thinks: All dogs bark. My pet barks. So my pet is a dog. Where is Tom's error?",
+        "Sara reasons: It's cloudy, so it will rain. It will rain, so I need an umbrella. It won't rain tomorrow. Where does Sara's reasoning fail?"
+      ]
+    },
+    {
+      "id": "false-cause",
+      "name": "False Cause Error",
+      "description": "Recognizing when someone incorrectly assumes one thing caused another",
+      "difficulty_min": 2,
+      "difficulty_max": 3,
+      "bloom_levels": ["analysis"],
+      "common_misconceptions": [
+        "Accepting temporal sequence as proof of causation",
+        "Not considering alternative explanations",
+        "Confusing correlation with causation"
+      ],
+      "question_patterns": [
+        "[Person] concludes that X caused Y. Which statement shows the flaw?",
+        "Why is [person]'s causal reasoning incorrect?"
+      ],
+      "example_stems": [
+        "I wore my lucky socks and won the game. The socks caused my win. What's the error?",
+        "After the new policy, sales increased. The policy improved sales. Where's the mistake?"
+      ]
+    },
+    {
+      "id": "hasty-generalization",
+      "name": "Hasty Generalization",
+      "description": "Recognizing when someone draws a broad conclusion from too few examples",
+      "difficulty_min": 2,
+      "difficulty_max": 3,
+      "bloom_levels": ["analysis"],
+      "common_misconceptions": [
+        "Not recognizing insufficient sample size",
+        "Accepting personal experience as universal truth",
+        "Missing the jump from specific to general"
+      ],
+      "question_patterns": [
+        "[Person] concludes that all X are Y. Where is the error?",
+        "What's wrong with generalizing from this example?"
+      ],
+      "example_stems": [
+        "I met two rude people from that city. Everyone there must be rude. What's the flaw?",
+        "My brother is tall. All boys must be tall. Where's the error in reasoning?"
+      ]
+    },
+    {
+      "id": "converse-error",
+      "name": "Affirming the Consequent",
+      "description": "Recognizing the error of concluding 'If A then B' means 'If B then A'",
+      "difficulty_min": 2,
+      "difficulty_max": 3,
+      "bloom_levels": ["analysis"],
+      "common_misconceptions": [
+        "Thinking the converse is always true",
+        "Reversing conditional statements",
+        "Not seeing the logical fallacy"
+      ],
+      "question_patterns": [
+        "[Person] reasons: If A then B. B is true. So A must be true. What's the error?",
+        "Where does reversing the conditional go wrong?"
+      ],
+      "example_stems": [
+        "If it rains, the ground is wet. The ground is wet. So it rained. What's the mistake?",
+        "All doctors study medicine. Kim studies medicine. So Kim is a doctor. Where's the flaw?"
+      ]
+    },
+    {
+      "id": "false-dichotomy",
+      "name": "False Dichotomy",
+      "description": "Recognizing when someone presents only two options when more exist",
+      "difficulty_min": 3,
+      "difficulty_max": 3,
+      "bloom_levels": ["analysis", "evaluation"],
+      "common_misconceptions": [
+        "Accepting limited choices as exhaustive",
+        "Not considering middle ground or alternatives",
+        "Either/or thinking"
+      ],
+      "question_patterns": [
+        "[Person] says it must be X or Y. What's wrong with this reasoning?",
+        "Why is limiting to these two options a mistake?"
+      ],
+      "example_stems": [
+        "You're either with us or against us. Why is this reasoning flawed?",
+        "Either we cancel the trip or go bankrupt. What option is being ignored?"
+      ]
+    },
+    {
+      "id": "circular-reasoning",
+      "name": "Circular Reasoning",
+      "description": "Recognizing when the conclusion is assumed in the premise",
+      "difficulty_min": 3,
+      "difficulty_max": 3,
+      "bloom_levels": ["analysis"],
+      "common_misconceptions": [
+        "Not noticing when the argument assumes its conclusion",
+        "Accepting rephrased conclusions as evidence",
+        "Missing the circular structure"
+      ],
+      "question_patterns": [
+        "[Person]'s argument assumes what it tries to prove. Which part shows this?",
+        "Where is the circular reasoning in this argument?"
+      ],
+      "example_stems": [
+        "This book is popular because everyone reads it. Everyone reads it because it's popular. What's the flaw?",
+        "Exercise is healthy because healthy people exercise. Where's the circular reasoning?"
+      ]
+    }
+  ]
+}

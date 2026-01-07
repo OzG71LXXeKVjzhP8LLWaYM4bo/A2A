@@ -1,6 +1,6 @@
 # A2A Selective Test Generator
 
-An Agent-to-Agent (A2A) based system for generating NSW Selective Schools practice exams using Google's Gemini API.
+An Agent-to-Agent (A2A) based system for generating NSW Selective Schools practice exams using Google's Gemini API. Questions match authentic NSW Selective High School Placement Test formats.
 
 ## Overview
 
@@ -9,38 +9,52 @@ This project implements a multi-agent architecture using Google's [A2A Protocol]
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │                 ORCHESTRATOR (Port 5000)                     │
-│                 REST API + Coordination                      │
+│                 REST API + Pipeline Coordination             │
 └─────────────────────────┬───────────────────────────────────┘
-                          │ A2A Protocol
-    ┌─────────────┬───────┼───────┬─────────────┬─────────────┐
-    ▼             ▼       ▼       ▼             ▼             ▼
-┌─────────┐ ┌─────────┐ ┌─────┐ ┌────────┐ ┌────────┐ ┌────────┐
-│THINKING │ │VERIFIER │ │IMAGE│ │DATABASE│ │  MATH  │ │READING │
-│ SKILLS  │◄┤         │ │     │ │        │ │        │ │        │
-│ (5001)  │ │ (5006)  │ │(5002│ │ (5003) │ │ (5004) │ │ (5005) │
-│         │►┤         │ │     │ │        │ │        │ │        │
-│ Gemini  │ │ Pass/   │ │ LLM │ │Postgres│ │(Future)│ │(Future)│
-│ Gen     │ │ Fail    │ │Route│ │ asyncpg│ │        │ │        │
-└─────────┘ └─────────┘ └─────┘ └────────┘ └────────┘ └────────┘
-                │
-        ┌───────┴───────┐
-        │  Feedback     │
-        │  Loop         │
-        │  (max 3x)     │
-        └───────────────┘
+                          │ A2A Protocol (parallel generation)
+         ┌────────────────┼────────────────┐
+         ▼                ▼                ▼
+    ┌─────────┐     ┌──────────┐     ┌─────────┐
+    │ CONCEPT │────▶│ QUESTION │────▶│ QUALITY │
+    │  GUIDE  │     │GENERATOR │     │ CHECKER │
+    │ (5001)  │     │  (5002)  │     │ (5003)  │
+    │         │     │          │     │         │
+    │ Concept │     │ NSW Exam │     │ Verify  │
+    │Selection│     │ Formats  │     │+ Revise │
+    └─────────┘     └──────────┘     └─────────┘
+         │                                 │
+         └────────── Feedback Loop ────────┘
+                    (max 3 revisions)
 ```
 
 ## Features
 
-- **Multi-Agent Architecture**: Separate agents for questions, verification, images, and database operations
+- **NSW Exam Formats**: Questions match authentic NSW Selective High School Placement Test patterns
+- **Multi-Agent Pipeline**: ConceptGuide → QuestionGenerator → QualityChecker with feedback loop
+- **Parallel Generation**: All subtopics generated concurrently for 3-5x faster exam creation
 - **A2A Protocol**: Standard inter-agent communication via JSON-RPC over HTTP
 - **Gemini Integration**: Uses Gemini Flash for question generation and routing decisions
-- **Auto-Verification**: Questions are automatically verified after generation with a pass/fail feedback loop
+- **Auto-Verification**: Questions verified with solver + adversarial checks, auto-revision on failure
 - **Triple Image Generation**: LLM-routed pipeline with GeoSDF (geometry), Spatial (3D cubes), and CCJ (general diagrams)
 - **SAT-Style Diagrams**: Clean, professional educational diagrams with precise geometry
 - **Cloudflare R2 Storage**: Auto-upload generated images with public URLs
 - **REST API**: FastAPI-based endpoints for easy integration
 - **Async PostgreSQL**: High-performance database operations with asyncpg
+
+## NSW Exam Question Formats
+
+The generator produces questions matching authentic NSW Selective test patterns:
+
+| Subtopic | Format | Example |
+|----------|--------|---------|
+| **Deduction** | Boxed premise + two characters reasoning | "Whose reasoning is correct? A only / B only / Both / Neither" |
+| **Inference** | Premise + character with flawed statement | "Which sentence shows the mistake [Name] has made?" |
+| **Critical Thinking** | Argument evaluation | "Which statement most strengthens/weakens the argument?" |
+| **Logical Reasoning** | Constraint satisfaction puzzles | Ordering, scheduling, truth-teller/liar puzzles |
+| **Analogies** | Conditional logic chains | If-then reasoning, contrapositive, necessary vs sufficient |
+| **Pattern Recognition** | Code-breaking, sequences | Faulty displays, letter codes, matrix patterns |
+| **Spatial Reasoning** | 3D visualization | Net folding, cube views, shape rotation |
+| **Sequencing** | Multi-step word problems | Rate problems, optimization, working backwards |
 
 ## Requirements
 
@@ -97,20 +111,18 @@ uv run python main.py all
 
 This starts all agents on their respective ports:
 - Orchestrator: http://localhost:5000
-- Thinking Skills: http://localhost:5001
-- Image: http://localhost:5002
-- Database: http://localhost:5003
-- Verifier: http://localhost:5006
+- Concept Guide: http://localhost:5001
+- Question Generator: http://localhost:5002
+- Quality Checker: http://localhost:5003
 
 ### Run Individual Agents
 
 ```bash
 # Run in separate terminals
 uv run python main.py orchestrator
-uv run python main.py thinking_skills
-uv run python main.py image
-uv run python main.py database
-uv run python main.py verifier
+uv run python main.py concept_guide
+uv run python main.py question_generator
+uv run python main.py quality_checker
 ```
 
 ### Generate an Exam
@@ -168,7 +180,7 @@ Content-Type: application/json
   "critical_thinking_count": 4,
   "deduction_count": 5,
   "inference_count": 4,
-  "logical_count": 5,
+  "logical_reasoning_count": 5,
   "pattern_recognition_count": 5,
   "sequencing_count": 4,
   "spatial_reasoning_count": 4,
@@ -176,6 +188,10 @@ Content-Type: application/json
   "custom_instructions": ""
 }
 ```
+
+Default generates 35 questions (matching NSW Selective exam format).
+
+**Performance**: ~60-90 seconds for 35 questions (parallel subtopic generation).
 
 ### Generate Math Exam
 ```
@@ -196,51 +212,55 @@ Content-Type: application/json
 
 The main coordinator that:
 - Exposes REST API endpoints
-- Delegates tasks to specialized agents
-- Aggregates results
-- Manages workflow state
+- Coordinates the multi-agent pipeline
+- Runs subtopics in parallel for fast generation
+- Aggregates results into complete exams
 
-### Thinking Skills Agent (Port 5001)
+### Concept Guide Agent (Port 5001)
 
-Generates thinking skills questions across 8 subtopics:
-- Analogies
-- Critical Thinking
-- Deduction
-- Inference
-- Logical Reasoning
-- Pattern Recognition
-- Sequencing
-- Spatial Reasoning
+Manages the concept curriculum and selects what to test:
+- Loads concept definitions from `data/concepts/`
+- Selects appropriate concepts based on subtopic and difficulty
+- Tracks misconceptions for distractor design
+- Provides concept context to the question generator
 
-Questions are automatically sent to the Verifier Agent after generation.
+### Question Generator Agent (Port 5002)
 
-### Verifier Agent (Port 5006)
+Creates questions using NSW Selective exam formats:
+- Loads subtopic-specific prompts from `prompts/thinking-skills/subtopics/`
+- Uses format templates matching real NSW exams (boxed premises, character dialogues)
+- Generates blueprint + realized question in one step
+- Handles revision requests from quality checker
 
-Automatically validates generated questions using a pass/fail feedback loop:
+**Subtopic-specific formats:**
+- **Deduction**: HTML box with premise, character statements, "Whose reasoning is correct?"
+- **Inference**: Premise content + character portrait with flawed statement
+- **Critical Thinking**: Argument + strengthen/weaken analysis
+
+### Quality Checker Agent (Port 5003)
+
+Validates questions with a multi-stage pipeline:
 
 ```
-Generate → Verify → PASS? → Done
-              ↓
-            FAIL
-              ↓
-    Get specific feedback
-              ↓
-    Regenerate with feedback
-              ↓
-         Re-verify
-              ↓
-    (loop max 3 times)
+Question → Solve → Attack → Judge → PASS? → Done
+                              ↓
+                            FAIL
+                              ↓
+                   Return issues + suggestions
+                              ↓
+                   Question Generator revises
+                              ↓
+                        Re-check
+                              ↓
+                   (loop max 3 times)
 ```
 
-**Verification checks (all must pass):**
-1. **Answer Correctness** - Independently solves the question to verify the marked answer
-2. **Quality** - Grammar, clarity, difficulty appropriateness, distractor quality
-3. **Format** - Structure (4 choices, 1 correct), no broken formatting
-4. **Explanation** - Explanation logic matches the correct answer
+**Verification stages:**
+1. **Solver** - Independently solves the question to verify the marked answer
+2. **Attacker** - Finds ambiguities, shortcuts, or alternative valid answers
+3. **Judge** - Makes final accept/reject decision with specific feedback
 
-If any check fails, the verifier returns specific feedback and the question is regenerated.
-
-### Image Agent (Port 5002)
+### Image Agent (future)
 
 Generates SAT-style educational diagrams using an LLM-routed triple approach:
 
@@ -298,16 +318,15 @@ A2A/
 ├── config.py               # Configuration management
 ├── pyproject.toml          # Dependencies
 ├── .env.example            # Environment template
+├── exam_viewer.html        # Interactive exam viewer/taker
 │
 ├── agents/
 │   ├── base_agent.py       # Base class with Gemini integration
-│   ├── orchestrator.py     # REST API + coordination
-│   ├── thinking_skills_agent.py
-│   ├── verifier_agent.py   # Question verification with feedback loop
-│   ├── image_agent.py      # LLM router + CCJ implementation
-│   ├── geosdf_generator.py # GeoSDF constraint optimization
-│   ├── spatial_generator.py # 3D cube stack questions
-│   └── database_agent.py
+│   ├── orchestrator.py     # REST API + pipeline coordination
+│   ├── pipeline_controller.py  # Manages question generation flow
+│   ├── concept_guide_agent.py  # Concept selection from curriculum
+│   ├── question_generator_agent.py  # NSW-format question creation
+│   └── quality_checker_agent.py     # Solver + Attacker + Judge
 │
 ├── a2a_local/
 │   ├── server.py           # A2A server (JSON-RPC)
@@ -315,13 +334,25 @@ A2A/
 │
 ├── models/
 │   ├── question.py         # Question/Exam Pydantic models
-│   └── verification.py     # Verification result models
+│   ├── blueprint.py        # Question blueprint models
+│   ├── judgment.py         # Quality judgment models
+│   └── curriculum.py       # Concept/curriculum models
+│
+├── data/
+│   └── concepts/
+│       └── thinking_skills/  # Concept definitions per subtopic
+│           ├── deduction.json
+│           ├── inference.json
+│           ├── critical_thinking.json
+│           └── ...
 │
 ├── prompts/
-│   ├── thinking-skills/    # Question generation prompts
-│   ├── math/               # Math prompts (future)
-│   ├── verification/       # Verification prompts (answer, quality, format, explanation)
-│   └── image_test_prompts.json  # 45 test prompts for image gen
+│   └── thinking-skills/
+│       └── subtopics/      # NSW exam format prompts
+│           ├── deduction.md    # "Whose reasoning is correct?"
+│           ├── inference.md    # "Which sentence shows the mistake?"
+│           ├── critical_thinking.md
+│           └── ...
 │
 └── tests/
 ```
@@ -392,6 +423,64 @@ Quality criteria (SAT-style):
 - Clean geometric precision
 
 Test prompts available in `prompts/image_test_prompts.json` (45 prompts covering both methods).
+
+## Logging
+
+The system includes comprehensive logging of all agent communications and LLM calls.
+
+### Enable Logging
+
+Logging is enabled by default. Control via environment variables:
+
+```bash
+# Set log level (DEBUG, INFO, WARNING, ERROR)
+export A2A_LOG_LEVEL=INFO
+
+# Enable verbose mode (shows full prompts/responses)
+export A2A_LOG_VERBOSE=true
+
+# Toggle LLM call logging
+export A2A_LOG_LLM=true
+
+# Toggle agent message logging
+export A2A_LOG_MESSAGES=true
+```
+
+### Log Output
+
+The logs show:
+- **Agent Messages**: All A2A protocol messages between agents (SEND/RECEIVE)
+- **LLM Calls**: Prompts sent to Gemini and responses received (with timing)
+- **Pipeline Steps**: Progress through the question generation pipeline
+- **Errors**: Any errors with context
+
+Example output:
+```
+────────────────────────────────────────────────────────────────────────────────
+[14:32:15.123] SEND Orchestrator → concept_guide (select_concept)
+{"action": "select_concept", "subtopic": "Deduction", "difficulty": 3}
+────────────────────────────────────────────────────────────────────────────────
+[14:32:15.456] STEP 1/3: Select Concept
+  subtopic=Deduction, difficulty=3
+════════════════════════════════════════════════════════════════════════════════
+[14:32:16.789] LLM CALL QuestionGeneratorAgent (gemini-2.0-flash)
+
+PROMPT:
+You are creating a NSW Selective Schools exam question...
+
+RESPONSE (2340ms):
+{"setup_elements": ["premise about scores"], "question_text": "Whose reasoning is correct?"...}
+════════════════════════════════════════════════════════════════════════════════
+```
+
+### Color Coding
+
+- **Magenta**: Orchestrator messages
+- **Blue**: Concept Guide messages
+- **Green**: Question Generator messages
+- **Yellow**: Quality Checker messages
+- **Cyan**: Outgoing messages (SEND)
+- **White**: Incoming messages (RECEIVE)
 
 ## Development
 

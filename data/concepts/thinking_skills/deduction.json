@@ -1,0 +1,117 @@
+{
+  "subtopic_id": "81762f7f-019e-4834-a764-fc4a830a46db",
+  "subtopic_name": "Deduction",
+  "display_name": "Deduction",
+  "topic_id": "096feb43-20f5-4ab7-8e3f-feb907884f9e",
+  "topic_name": "Thinking Skills",
+  "description": "Two-person reasoning evaluation where a premise is given in a box and two characters make logical statements. Determine whose reasoning is correct.",
+  "typically_requires_image": true,
+  "image_types": ["character_portrait", "two_person_dialogue"],
+  "concepts": [
+    {
+      "id": "evaluate-two-claims",
+      "name": "Evaluating Two Competing Claims",
+      "description": "Given a premise, determine which of two people's conclusions correctly follows from the given information",
+      "difficulty_min": 2,
+      "difficulty_max": 3,
+      "bloom_levels": ["analysis", "evaluation"],
+      "common_misconceptions": [
+        "Agreeing with the more confident-sounding person",
+        "Not carefully checking each claim against the premise",
+        "Missing subtle differences in the claims"
+      ],
+      "question_patterns": [
+        "[Premise in box]. Person A says [claim]. Person B says [claim]. Who is correct?",
+        "Based on the information given, whose reasoning is valid?"
+      ],
+      "example_stems": [
+        "All cats have tails. Fluffy is a cat. Amy says Fluffy has a tail. Ben says all animals with tails are cats. Who is correct?",
+        "The store closes at 5pm. It is 4:30pm. Maya says the store is open. Noah says we have 30 minutes. Who is right?"
+      ]
+    },
+    {
+      "id": "both-correct",
+      "name": "Both Conclusions Correct",
+      "description": "Recognizing when both people's conclusions validly follow from the premise",
+      "difficulty_min": 2,
+      "difficulty_max": 3,
+      "bloom_levels": ["analysis"],
+      "common_misconceptions": [
+        "Thinking only one person can be right",
+        "Not considering that both might follow logically",
+        "Looking for conflict where none exists"
+      ],
+      "question_patterns": [
+        "Based on the premise, which of the following is true about the two claims?",
+        "Are both conclusions valid? Why or why not?"
+      ],
+      "example_stems": [
+        "All squares are rectangles. Kim says squares have 4 right angles. Lee says squares have 4 sides. Who is correct?",
+        "The number is even. Pat says it's divisible by 2. Sam says it's not odd. Whose reasoning is valid?"
+      ]
+    },
+    {
+      "id": "neither-correct",
+      "name": "Neither Conclusion Correct",
+      "description": "Recognizing when both people make errors in their reasoning from the premise",
+      "difficulty_min": 3,
+      "difficulty_max": 3,
+      "bloom_levels": ["analysis", "evaluation"],
+      "common_misconceptions": [
+        "Feeling forced to choose one person",
+        "Not noticing flaws in both arguments",
+        "Assuming at least one must be right"
+      ],
+      "question_patterns": [
+        "Based on the premise, which statement is true?",
+        "Who reasons correctly from the given information?"
+      ],
+      "example_stems": [
+        "Some birds can fly. Robin says all birds fly. Jordan says no birds swim. Who is correct?",
+        "The box is heavy. Alex says it contains books. Morgan says it's too heavy to lift. Who is right?"
+      ]
+    },
+    {
+      "id": "partial-information",
+      "name": "Reasoning with Partial Information",
+      "description": "Drawing valid conclusions when the premise doesn't tell us everything",
+      "difficulty_min": 2,
+      "difficulty_max": 3,
+      "bloom_levels": ["analysis"],
+      "common_misconceptions": [
+        "Assuming more than the premise states",
+        "Concluding something is false just because it's not stated",
+        "Over-interpreting limited information"
+      ],
+      "question_patterns": [
+        "What can definitely be concluded from the information given?",
+        "Which conclusion follows with certainty?"
+      ],
+      "example_stems": [
+        "Some students play sports. Emma says all students play sports. Oliver says some students don't play sports. Who is correct?",
+        "The train is delayed. Lily says it will arrive late. Jake says it won't arrive at all. Who reasons correctly?"
+      ]
+    },
+    {
+      "id": "quantifier-reasoning",
+      "name": "Reasoning with Quantifiers",
+      "description": "Understanding the logical implications of 'all', 'some', 'none', and 'not all'",
+      "difficulty_min": 2,
+      "difficulty_max": 3,
+      "bloom_levels": ["comprehension", "analysis"],
+      "common_misconceptions": [
+        "Confusing 'some' with 'all'",
+        "Thinking 'not all' means 'none'",
+        "Assuming 'some' means 'exactly some but not all'"
+      ],
+      "question_patterns": [
+        "Given that [quantified statement], what must be true?",
+        "If some X are Y, what follows about X and Y?"
+      ],
+      "example_stems": [
+        "Not all fruits are sweet. Chloe says some fruits are not sweet. Dylan says no fruits are sweet. Who is correct?",
+        "All rectangles have 4 sides. Grace says all shapes with 4 sides are rectangles. Henry says rectangles are shapes. Who is right?"
+      ]
+    }
+  ]
+}

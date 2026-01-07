@@ -1,0 +1,137 @@
+{
+  "subtopic_id": "40825bd0-994a-4e6e-8417-03aa359b45c6",
+  "subtopic_name": "Sequencing",
+  "display_name": "Numerical Reasoning",
+  "topic_id": "096feb43-20f5-4ab7-8e3f-feb907884f9e",
+  "topic_name": "Thinking Skills",
+  "description": "Multi-step word problems requiring calculations with rules. Problems about counting, scheduling, quantities, and price/cost optimization.",
+  "typically_requires_image": false,
+  "concepts": [
+    {
+      "id": "multi-step-calculation",
+      "name": "Multi-Step Calculations",
+      "description": "Solving problems that require multiple arithmetic operations in sequence",
+      "difficulty_min": 1,
+      "difficulty_max": 3,
+      "bloom_levels": ["application"],
+      "common_misconceptions": [
+        "Performing operations in wrong order",
+        "Forgetting intermediate steps",
+        "Not carrying results forward correctly"
+      ],
+      "question_patterns": [
+        "[Scenario with multiple operations]. What is the final result?",
+        "Calculate the total after applying these rules."
+      ],
+      "example_stems": [
+        "Tom has 24 apples. He gives half away, then buys 10 more. How many does he have?",
+        "A recipe needs 3 cups of flour. If you triple it and then use half, how much flour do you use?"
+      ]
+    },
+    {
+      "id": "rate-problems",
+      "name": "Rate and Speed Problems",
+      "description": "Problems involving rates, speeds, or work done over time",
+      "difficulty_min": 2,
+      "difficulty_max": 3,
+      "bloom_levels": ["application", "analysis"],
+      "common_misconceptions": [
+        "Confusing speed, time, and distance relationships",
+        "Averaging speeds incorrectly",
+        "Not accounting for different rates in different phases"
+      ],
+      "question_patterns": [
+        "At this rate, how long will it take to [complete task]?",
+        "If [person] works at [rate], how much [work] in [time]?"
+      ],
+      "example_stems": [
+        "A machine makes 50 items per hour. How many in 3.5 hours?",
+        "Walking at 4 km/h, how long to walk 6 km?"
+      ]
+    },
+    {
+      "id": "cost-optimization",
+      "name": "Cost and Price Optimization",
+      "description": "Finding the best combination of items or approach to minimize cost or maximize value",
+      "difficulty_min": 2,
+      "difficulty_max": 3,
+      "bloom_levels": ["analysis", "evaluation"],
+      "common_misconceptions": [
+        "Not considering all combinations",
+        "Missing bulk discounts or special offers",
+        "Not checking if constraints are satisfied"
+      ],
+      "question_patterns": [
+        "What's the cheapest way to buy [items]?",
+        "How can [person] maximize [value] with [budget]?"
+      ],
+      "example_stems": [
+        "Pens cost $2 each or $5 for 3. What's the cheapest way to buy 7 pens?",
+        "With $20, what combination of items gives the most value?"
+      ]
+    },
+    {
+      "id": "counting-problems",
+      "name": "Systematic Counting",
+      "description": "Counting arrangements, combinations, or outcomes systematically",
+      "difficulty_min": 2,
+      "difficulty_max": 3,
+      "bloom_levels": ["application", "analysis"],
+      "common_misconceptions": [
+        "Double-counting arrangements",
+        "Missing cases",
+        "Confusing permutations and combinations"
+      ],
+      "question_patterns": [
+        "How many ways can [items] be arranged?",
+        "How many different [outcomes] are possible?"
+      ],
+      "example_stems": [
+        "How many 2-digit numbers can be formed using 1, 2, 3 without repeating?",
+        "In how many ways can 4 people line up?"
+      ]
+    },
+    {
+      "id": "working-backwards",
+      "name": "Working Backwards",
+      "description": "Starting from the end result and reversing operations to find the starting value",
+      "difficulty_min": 2,
+      "difficulty_max": 3,
+      "bloom_levels": ["analysis"],
+      "common_misconceptions": [
+        "Not reversing operations correctly (add↔subtract, multiply↔divide)",
+        "Reversing in wrong order",
+        "Forgetting that operations reverse differently"
+      ],
+      "question_patterns": [
+        "[Result] after [operations]. What was the starting value?",
+        "Working backwards, find the original number."
+      ],
+      "example_stems": [
+        "After doubling and adding 5, the result is 17. What was the original number?",
+        "Maya now has 30 stickers after giving away half and getting 10 more. How many did she start with?"
+      ]
+    },
+    {
+      "id": "logical-constraints",
+      "name": "Problems with Constraints",
+      "description": "Finding values that satisfy multiple conditions simultaneously",
+      "difficulty_min": 2,
+      "difficulty_max": 3,
+      "bloom_levels": ["analysis"],
+      "common_misconceptions": [
+        "Satisfying only some constraints",
+        "Not checking all conditions are met",
+        "Missing edge cases"
+      ],
+      "question_patterns": [
+        "Find a number that satisfies all these conditions.",
+        "What value makes all these statements true?"
+      ],
+      "example_stems": [
+        "I am thinking of a number less than 20, divisible by 3, and greater than 10. What is it?",
+        "Find the smallest number that is even, greater than 50, and a multiple of 7."
+      ]
+    }
+  ]
+}

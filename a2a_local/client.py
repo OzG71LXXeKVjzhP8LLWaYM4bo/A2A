@@ -1,6 +1,7 @@
 """A2A Client for inter-agent communication."""
 
 import json
+import time
 import uuid
 from typing import Any, Optional
 from dataclasses import dataclass
@@ -8,6 +9,8 @@ from dataclasses import dataclass
 import httpx
 from a2a.client import A2AClient as BaseA2AClient
 from a2a.types import AgentCard, Message, TextPart
+
+from .logging_utils import log_agent_message, log_error
 
 
 @dataclass
@@ -24,8 +27,9 @@ class AgentEndpoint:
 class A2AClient:
     """Client for communicating with A2A agents."""
 
-    def __init__(self, timeout: float = 120.0):
+    def __init__(self, timeout: float = 120.0, caller_name: str = "Client"):
         self.timeout = timeout
+        self.caller_name = caller_name
         self._http_client = httpx.AsyncClient(timeout=timeout)
 
     async def get_agent_card(self, endpoint: AgentEndpoint) -> Optional[AgentCard]:
@@ -37,7 +41,7 @@ class A2AClient:
             response.raise_for_status()
             return AgentCard.model_validate(response.json())
         except Exception as e:
-            print(f"Failed to get agent card from {endpoint.name}: {e}")
+            log_error(self.caller_name, f"Failed to get agent card from {endpoint.name}: {e}")
             return None
 
     async def send_task(
@@ -48,6 +52,24 @@ class A2AClient:
         params: Optional[dict] = None,
     ) -> dict:
         """Send a task to an agent and wait for completion."""
+        # Parse message for logging
+        try:
+            message_data = json.loads(message)
+        except json.JSONDecodeError:
+            message_data = message
+
+        # Log outgoing message
+        log_agent_message(
+            direction="SEND",
+            from_agent=self.caller_name,
+            to_agent=endpoint.name,
+            message_type=skill_id,
+            content=message_data,
+            metadata=params,
+        )
+
+        start_time = time.time()
+
         try:
             # Create task message with required messageId
             task_message = Message(
@@ -74,12 +96,26 @@ class A2AClient:
             response.raise_for_status()
             result = response.json()
 
+            elapsed_ms = (time.time() - start_time) * 1000
+
             if "error" in result:
+                log_error(self.caller_name, f"Error from {endpoint.name}: {result['error']}")
                 return {"error": result["error"]}
 
-            return result.get("result", {})
+            # Log response
+            response_data = result.get("result", {})
+            log_agent_message(
+                direction="RECEIVE",
+                from_agent=endpoint.name,
+                to_agent=self.caller_name,
+                message_type=f"{skill_id}_response ({elapsed_ms:.0f}ms)",
+                content=response_data,
+            )
+
+            return response_data
 
         except Exception as e:
+            log_error(self.caller_name, f"Error sending to {endpoint.name}: {e}")
             return {"error": str(e)}
 
     async def send_task_streaming(
@@ -127,11 +163,15 @@ class A2AClient:
 
 # Pre-configured agent endpoints
 AGENT_ENDPOINTS = {
+    # Core agents
     "orchestrator": AgentEndpoint("orchestrator", "http://localhost:5000", 5000),
-    "thinking_skills": AgentEndpoint("thinking_skills", "http://localhost:5001", 5001),
     "image": AgentEndpoint("image", "http://localhost:5002", 5002),
     "database": AgentEndpoint("database", "http://localhost:5003", 5003),
     "math": AgentEndpoint("math", "http://localhost:5004", 5004),
     "reading": AgentEndpoint("reading", "http://localhost:5005", 5005),
     "verifier": AgentEndpoint("verifier", "http://localhost:5006", 5006),
+    # Pipeline agents (consolidated)
+    "concept_guide": AgentEndpoint("concept_guide", "http://localhost:5007", 5007),
+    "question_generator": AgentEndpoint("question_generator", "http://localhost:5008", 5008),
+    "quality_checker": AgentEndpoint("quality_checker", "http://localhost:5009", 5009),
 }
