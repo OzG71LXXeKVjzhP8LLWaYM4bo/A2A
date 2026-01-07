@@ -2,7 +2,7 @@
 
 import asyncio
 import json
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Any, Optional
 
 from fastapi import FastAPI, HTTPException
@@ -101,7 +101,7 @@ class OrchestratorAgent(BaseAgent):
 
         return {
             "agents": statuses,
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
         }
 
     async def generate_exam(
@@ -116,7 +116,7 @@ class OrchestratorAgent(BaseAgent):
             return {"error": f"Unsupported exam type: {exam_type}"}
 
         # Generate exam code
-        now = datetime.utcnow()
+        now = datetime.now(timezone.utc)
         prefix = {"thinking_skills": "THINK", "math": "MATH", "reading": "READ"}
         exam_code = exam_config.get("exam_code") or f"{prefix[exam_type]}-{now.strftime('%Y%m%d-%H%M')}"
         exam_name = exam_config.get("exam_name") or f"{exam_type.replace('_', ' ').title()} Exam {exam_code}"
@@ -149,6 +149,11 @@ class OrchestratorAgent(BaseAgent):
 
         questions = questions_result.get("questions", [])
 
+        # Add topic_id to each question for database foreign key
+        topic_id = config.topic_uuids.get(exam_type)
+        for q in questions:
+            q["topic_id"] = topic_id
+
         # Step 2: Generate images for questions that need them
         questions_needing_images = [q for q in questions if q.get("requires_image")]
 
@@ -162,7 +167,17 @@ class OrchestratorAgent(BaseAgent):
             for q in questions_needing_images:
                 image_result = await self._generate_image(q.get("image_description", ""))
                 if image_result.get("success"):
-                    q["image_url"] = f"data:image/png;base64,{image_result.get('image_base64', '')}"
+                    image_url = f"data:image/png;base64,{image_result.get('image_base64', '')}"
+                    q["image_url"] = image_url
+
+                    # Insert image into the question content for rendering
+                    img_tag = f'<div class="question-image"><img src="{image_url}" alt="Question diagram"></div>'
+
+                    # Add image to content field (before the question text)
+                    if q.get("content"):
+                        q["content"] = img_tag + "\n" + q["content"]
+                    else:
+                        q["content"] = img_tag
 
             result["steps"][-1]["status"] = "completed"
 
@@ -235,27 +250,20 @@ class OrchestratorAgent(BaseAgent):
         """Generate thinking skills questions using the multi-agent pipeline."""
         # Get subtopic distribution from config
         subtopic_questions = exam_config.get("subtopic_questions", {})
-        total_questions = exam_config.get("total_questions", 35)
         difficulty = exam_config.get("difficulty", 3)
 
-        # Default distribution if not specified
+        # Default distribution matching NSW Selective exam (40 questions)
+        # Based on analysis of official Practice Test 1
         if not subtopic_questions:
-            # Map subtopic names to keys used in concept files
-            subtopic_keys = [
-                "analogies",
-                "logical_reasoning",
-                "pattern_recognition",
-                "spatial_reasoning",
-                "sequencing",
-                "deduction",
-                "inference",
-                "critical_thinking",
-            ]
-            questions_per_subtopic = total_questions // len(subtopic_keys)
-            remainder = total_questions % len(subtopic_keys)
-
-            for i, key in enumerate(subtopic_keys):
-                subtopic_questions[key] = questions_per_subtopic + (1 if i < remainder else 0)
+            subtopic_questions = {
+                "critical_thinking": 7,      # Strengthen/weaken arguments
+                "deduction": 4,              # "Whose reasoning is correct?" (2 characters)
+                "inference": 4,              # "Which shows the mistake?" (1 character)
+                "logical_reasoning": 11,     # Conditionals, constraints, logic grids
+                "spatial_reasoning": 6,      # Visual patterns, shapes, transformations
+                "numerical_reasoning": 8,    # Word problems with calculations
+            }
+            # Total: 40 questions
 
         all_questions = []
         errors = []
@@ -323,11 +331,41 @@ class OrchestratorAgent(BaseAgent):
             "max_attempts": 3,
         })
 
-        return await self.a2a_client.send_task(
+        response = await self.a2a_client.send_task(
             endpoint=endpoint,
             skill_id="generate_diagram",
             message=task_message,
         )
+        return self._parse_a2a_response(response)
+
+    def _parse_a2a_response(self, response: dict) -> dict:
+        """Parse the A2A response structure to extract the agent's actual response."""
+        if response is None:
+            return {"error": "No response"}
+
+        # Handle error response
+        if "error" in response:
+            return {"error": str(response["error"])}
+
+        # Extract from status.message.parts structure
+        status = response.get("status")
+        if status and isinstance(status, dict):
+            message = status.get("message")
+            if message and isinstance(message, dict):
+                parts = message.get("parts", [])
+                if parts:
+                    text = parts[0].get("text", "")
+                    if text:
+                        try:
+                            return json.loads(text)
+                        except json.JSONDecodeError:
+                            return {"error": f"Invalid JSON response: {text[:100]}"}
+
+        # Maybe it's already the parsed result
+        if "success" in response:
+            return response
+
+        return {"error": "Could not parse response"}
 
     async def _insert_questions(self, questions: list[dict]) -> dict:
         """Send task to Database Agent."""
@@ -338,11 +376,12 @@ class OrchestratorAgent(BaseAgent):
             "questions": questions,
         })
 
-        return await self.a2a_client.send_task(
+        response = await self.a2a_client.send_task(
             endpoint=endpoint,
             skill_id="insert_questions",
             message=task_message,
         )
+        return self._parse_a2a_response(response)
 
     async def _create_exam(
         self,
@@ -358,11 +397,12 @@ class OrchestratorAgent(BaseAgent):
             "question_ids": question_ids,
         })
 
-        return await self.a2a_client.send_task(
+        response = await self.a2a_client.send_task(
             endpoint=endpoint,
             skill_id="create_exam",
             message=task_message,
         )
+        return self._parse_a2a_response(response)
 
     async def _add_exam_to_pack(
         self,
@@ -378,11 +418,12 @@ class OrchestratorAgent(BaseAgent):
             "pack_id": pack_id,
         })
 
-        return await self.a2a_client.send_task(
+        response = await self.a2a_client.send_task(
             endpoint=endpoint,
             skill_id="add_exam_to_pack",
             message=task_message,
         )
+        return self._parse_a2a_response(response)
 
 
 # FastAPI app for REST API
@@ -407,7 +448,7 @@ def create_api_app() -> FastAPI:
 
     @app.get("/health")
     async def health():
-        return {"status": "healthy", "timestamp": datetime.utcnow().isoformat()}
+        return {"status": "healthy", "timestamp": datetime.now(timezone.utc).isoformat()}
 
     @app.get("/agents")
     async def list_agents():

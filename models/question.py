@@ -255,15 +255,30 @@ class ExamConfig(BaseModel):
 
 
 class ThinkingSkillsConfig(ExamConfig):
-    # 8 subtopics matching n8n and database
-    analogies_count: int = 4
-    critical_thinking_count: int = 4
-    deduction_count: int = 5
+    """NSW Selective exam distribution (40 questions total).
+
+    Based on analysis of official Practice Test 1:
+    - Critical Thinking: 7 (strengthen/weaken arguments)
+    - Deduction: 4 ("Whose reasoning is correct?" with 2 characters)
+    - Inference: 4 ("Which shows the mistake X made?" with 1 character)
+    - Logical Reasoning: 11 (conditionals, constraints, logic grids)
+    - Spatial Reasoning: 6 (visual patterns, shapes, transformations)
+    - Numerical Reasoning: 8 (word problems with calculations)
+
+    Note: Analogies and Pattern Recognition are not used in the real exam
+    (Pattern Recognition is absorbed into Spatial Reasoning).
+    """
+    # Used subtopics (40 total)
+    critical_thinking_count: int = 7
+    deduction_count: int = 4
     inference_count: int = 4
-    logical_reasoning_count: int = 5
-    pattern_recognition_count: int = 5
-    sequencing_count: int = 4
-    spatial_reasoning_count: int = 4
+    logical_reasoning_count: int = 11
+    spatial_reasoning_count: int = 6
+    numerical_reasoning_count: int = 8
+
+    # Unused subtopics (kept for compatibility, set to 0)
+    analogies_count: int = 0
+    pattern_recognition_count: int = 0
 
 
 class MathConfig(ExamConfig):

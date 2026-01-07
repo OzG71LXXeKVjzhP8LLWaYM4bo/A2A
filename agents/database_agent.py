@@ -2,7 +2,7 @@
 
 import asyncio
 import json
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Any, Optional
 from uuid import UUID, uuid4
 
@@ -118,14 +118,14 @@ class DatabaseAgent(BaseAgent):
                     # Convert choices to JSON
                     choices = json.dumps(q_data.get("choices", []))
 
-                    # Build insert query - matching n8n schema with all question type fields
+                    # Build insert query - matching database schema
                     query = """
                         INSERT INTO questionbank (
                             id, question, content, choices, explanation, type,
                             difficulty, topic_id, subtopic_ids, tags,
-                            showup, is_active, max_positions, marking_criteria, created_at
+                            showup, is_active, marking_criteria, created_at
                         ) VALUES (
-                            $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15
+                            $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14
                         )
                         ON CONFLICT (id) DO UPDATE SET
                             content = EXCLUDED.content,
@@ -133,7 +133,6 @@ class DatabaseAgent(BaseAgent):
                             choices = EXCLUDED.choices,
                             explanation = EXCLUDED.explanation,
                             type = EXCLUDED.type,
-                            max_positions = EXCLUDED.max_positions,
                             marking_criteria = EXCLUDED.marking_criteria,
                             updated_at = NOW()
                         RETURNING id
@@ -154,9 +153,9 @@ class DatabaseAgent(BaseAgent):
                     if isinstance(topic_id, str):
                         topic_id = UUID(topic_id)
 
-                    # Prepare marking_criteria as JSON if present
+                    # Prepare marking_criteria as JSON if present (handle empty list case)
                     marking_criteria = q_data.get("marking_criteria")
-                    if marking_criteria:
+                    if marking_criteria is not None:
                         marking_criteria = json.dumps(marking_criteria)
 
                     result = await conn.fetchval(
@@ -173,9 +172,8 @@ class DatabaseAgent(BaseAgent):
                         q_data.get("tags", []),
                         q_data.get("showup", True),
                         q_data.get("is_active", True),
-                        q_data.get("max_positions"),  # For drag-and-drop
                         marking_criteria,  # For writing questions
-                        datetime.utcnow(),
+                        datetime.now(timezone.utc),
                     )
                     inserted_ids.append(str(result))
 
@@ -212,23 +210,19 @@ class DatabaseAgent(BaseAgent):
             async with conn.transaction():
                 try:
                     # Generate exam code if not provided
-                    now = datetime.utcnow()
+                    now = datetime.now(timezone.utc)
                     exam_code = exam_data.get("code") or f"EXAM-{now.strftime('%Y%m%d-%H%M')}"
                     exam_name = exam_data.get("name") or f"Exam {exam_code}"
                     exam_id = exam_data.get("id") or str(uuid4())
 
-                    # Insert exam - matching n8n schema with type and question_count
+                    # Insert exam - matching database schema
                     exam_query = """
                         INSERT INTO exams (
                             id, code, name, description, type, time_limit,
-                            question_count, topic_id, is_active, created_at
-                        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+                            question_count, is_active, created_at
+                        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
                         RETURNING id
                     """
-
-                    topic_id = exam_data.get("topic_id")
-                    if isinstance(topic_id, str):
-                        topic_id = UUID(topic_id)
 
                     # Get question_count - either from exam_data or from question_ids length
                     question_count = exam_data.get("question_count", len(question_ids))
@@ -242,7 +236,6 @@ class DatabaseAgent(BaseAgent):
                         exam_data.get("type", "thinking-skills"),
                         exam_data.get("time_limit", 45),
                         question_count,
-                        topic_id,
                         exam_data.get("is_active", True),
                         now,
                     )

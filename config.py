@@ -98,9 +98,9 @@ class Config(BaseModel):
             "name": "Pattern Recognition",
             "display_name": "Pattern Recognition",
         },
-        "sequencing": {
+        "numerical_reasoning": {
             "id": "40825bd0-994a-4e6e-8417-03aa359b45c6",
-            "name": "Sequencing",
+            "name": "Numerical Reasoning",
             "display_name": "Numerical Reasoning",
         },
         "spatial_reasoning": {

@@ -43,18 +43,18 @@ This project implements a multi-agent architecture using Google's [A2A Protocol]
 
 ## NSW Exam Question Formats
 
-The generator produces questions matching authentic NSW Selective test patterns:
+The generator produces questions matching authentic NSW Selective test patterns (based on Practice Test 1 analysis):
 
-| Subtopic | Format | Example |
-|----------|--------|---------|
-| **Deduction** | Boxed premise + two characters reasoning | "Whose reasoning is correct? A only / B only / Both / Neither" |
-| **Inference** | Premise + character with flawed statement | "Which sentence shows the mistake [Name] has made?" |
-| **Critical Thinking** | Argument evaluation | "Which statement most strengthens/weakens the argument?" |
-| **Logical Reasoning** | Constraint satisfaction puzzles | Ordering, scheduling, truth-teller/liar puzzles |
-| **Analogies** | Conditional logic chains | If-then reasoning, contrapositive, necessary vs sufficient |
-| **Pattern Recognition** | Code-breaking, sequences | Faulty displays, letter codes, matrix patterns |
-| **Spatial Reasoning** | 3D visualization | Net folding, cube views, shape rotation |
-| **Sequencing** | Multi-step word problems | Rate problems, optimization, working backwards |
+| Subtopic | Count | Format | Example |
+|----------|-------|--------|---------|
+| **Critical Thinking** | 7 | Argument evaluation | "Which statement most strengthens/weakens the argument?" |
+| **Logical Reasoning** | 11 | Conditionals, constraints, logic grids | If-then reasoning, contrapositive, truth-teller puzzles |
+| **Deduction** | 4 | Boxed premise + two characters reasoning | "Whose reasoning is correct? A only / B only / Both / Neither" |
+| **Inference** | 4 | Premise + character with flawed statement | "Which sentence shows the mistake [Name] has made?" |
+| **Numerical Reasoning** | 8 | Multi-step word problems | Rate problems, optimization, working backwards |
+| **Spatial Reasoning** | 6 | Visual patterns and shapes | Net folding, cube views, shape transformation |
+
+**Total: 40 questions** (matching NSW Selective exam)
 
 ## Requirements
 
@@ -176,22 +176,20 @@ POST /api/exams/thinking-skills
 Content-Type: application/json
 
 {
-  "analogies_count": 4,
-  "critical_thinking_count": 4,
-  "deduction_count": 5,
+  "critical_thinking_count": 7,
+  "logical_reasoning_count": 11,
+  "deduction_count": 4,
   "inference_count": 4,
-  "logical_reasoning_count": 5,
-  "pattern_recognition_count": 5,
-  "sequencing_count": 4,
-  "spatial_reasoning_count": 4,
+  "numerical_reasoning_count": 8,
+  "spatial_reasoning_count": 6,
   "enable_images": true,
   "custom_instructions": ""
 }
 ```
 
-Default generates 35 questions (matching NSW Selective exam format).
+Default generates 40 questions (matching NSW Selective exam distribution based on Practice Test 1).
 
-**Performance**: ~60-90 seconds for 35 questions (parallel subtopic generation).
+**Performance**: ~90-120 seconds for 40 questions (parallel subtopic generation).
 
 ### Generate Math Exam
 ```

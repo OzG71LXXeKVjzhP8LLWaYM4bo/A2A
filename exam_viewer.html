@@ -814,38 +814,31 @@
 
         <div class="config-panel" id="configPanel">
             <h2>Configure Your Exam</h2>
+            <!-- NSW Selective Exam Distribution (40 questions) -->
             <div class="config-grid">
                 <div class="config-item">
-                    <label>Analogies (Conditional Logic)</label>
-                    <input type="number" id="analogies" value="4" min="0" max="15">
+                    <label>Critical Thinking</label>
+                    <input type="number" id="critical_thinking" value="7" min="0" max="15">
                 </div>
                 <div class="config-item">
                     <label>Logical Reasoning</label>
-                    <input type="number" id="logical_reasoning" value="5" min="0" max="15">
-                </div>
-                <div class="config-item">
-                    <label>Pattern Recognition</label>
-                    <input type="number" id="pattern_recognition" value="5" min="0" max="15">
-                </div>
-                <div class="config-item">
-                    <label>Spatial Reasoning</label>
-                    <input type="number" id="spatial_reasoning" value="4" min="0" max="15">
+                    <input type="number" id="logical_reasoning" value="11" min="0" max="15">
                 </div>
                 <div class="config-item">
                     <label>Deduction</label>
-                    <input type="number" id="deduction" value="5" min="0" max="15">
+                    <input type="number" id="deduction" value="4" min="0" max="15">
                 </div>
                 <div class="config-item">
                     <label>Inference</label>
                     <input type="number" id="inference" value="4" min="0" max="15">
                 </div>
                 <div class="config-item">
-                    <label>Sequencing (Numerical)</label>
-                    <input type="number" id="sequencing" value="4" min="0" max="15">
+                    <label>Numerical Reasoning</label>
+                    <input type="number" id="numerical_reasoning" value="8" min="0" max="15">
                 </div>
                 <div class="config-item">
-                    <label>Critical Thinking</label>
-                    <input type="number" id="critical_thinking" value="4" min="0" max="15">
+                    <label>Spatial Reasoning</label>
+                    <input type="number" id="spatial_reasoning" value="6" min="0" max="15">
                 </div>
             </div>
 
@@ -1138,15 +1131,14 @@
         });
 
         async function generateExam() {
+            // NSW Selective Exam distribution (40 questions)
             const config = {
-                analogies: parseInt(document.getElementById('analogies').value) || 0,
+                critical_thinking: parseInt(document.getElementById('critical_thinking').value) || 0,
                 logical_reasoning: parseInt(document.getElementById('logical_reasoning').value) || 0,
-                pattern_recognition: parseInt(document.getElementById('pattern_recognition').value) || 0,
-                spatial_reasoning: parseInt(document.getElementById('spatial_reasoning').value) || 0,
                 deduction: parseInt(document.getElementById('deduction').value) || 0,
                 inference: parseInt(document.getElementById('inference').value) || 0,
-                sequencing: parseInt(document.getElementById('sequencing').value) || 0,
-                critical_thinking: parseInt(document.getElementById('critical_thinking').value) || 0,
+                numerical_reasoning: parseInt(document.getElementById('numerical_reasoning').value) || 0,
+                spatial_reasoning: parseInt(document.getElementById('spatial_reasoning').value) || 0,
             };
 
             const enableImages = document.getElementById('enableImages').checked;
@@ -1277,8 +1269,10 @@
                     contentHtml = `<div class="question-content">${q.content}</div>`;
                 }
 
+                // Only add separate image block if image_url exists AND content doesn't already contain it
                 let imageHtml = '';
-                if (q.image_url) {
+                const contentHasImage = q.content && q.content.includes('<img');
+                if (q.image_url && !contentHasImage) {
                     imageHtml = `
                         <div class="question-image">
                             <img src="${q.image_url}" alt="Question diagram" onclick="openImageModal('${q.image_url}')">
