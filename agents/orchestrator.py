@@ -267,37 +267,59 @@ class OrchestratorAgent(BaseAgent):
 
         all_questions = []
         errors = []
+        questions_by_subtopic = {st: [] for st in subtopic_questions.keys()}
 
-        # Generate all subtopics in PARALLEL for speed
-        tasks = []
-        subtopic_names = []
-        for subtopic, count in subtopic_questions.items():
-            if count <= 0:
-                continue
-            print(f"Queuing {count} questions for {subtopic}...")
-            tasks.append(self.pipeline.generate_batch(
-                subtopic=subtopic,
-                count=count,
-                difficulty=difficulty,
-            ))
-            subtopic_names.append(subtopic)
+        max_retry_rounds = 3  # Maximum retry rounds for missing questions
 
-        print(f"Generating {len(tasks)} subtopics in parallel...")
-        all_results = await asyncio.gather(*tasks, return_exceptions=True)
+        for retry_round in range(max_retry_rounds + 1):
+            # Calculate what we still need
+            tasks = []
+            subtopic_names = []
+            for subtopic, target_count in subtopic_questions.items():
+                if target_count <= 0:
+                    continue
+                current_count = len(questions_by_subtopic[subtopic])
+                needed = target_count - current_count
+                if needed > 0:
+                    if retry_round == 0:
+                        print(f"Queuing {needed} questions for {subtopic}...")
+                    else:
+                        print(f"[Retry {retry_round}] Regenerating {needed} missing questions for {subtopic}...")
+                    tasks.append(self.pipeline.generate_batch(
+                        subtopic=subtopic,
+                        count=needed,
+                        difficulty=difficulty,
+                    ))
+                    subtopic_names.append(subtopic)
 
-        # Process results from all subtopics
-        for subtopic, results in zip(subtopic_names, all_results):
-            if isinstance(results, Exception):
-                errors.append(f"Error generating {subtopic}: {str(results)}")
-                continue
+            if not tasks:
+                # All questions generated successfully
+                break
 
-            for result in results:
-                if result.accepted and result.question:
-                    # Question is already a dict from pipeline
-                    q_dict = result.question if isinstance(result.question, dict) else result.question.model_dump(mode="json")
-                    all_questions.append(q_dict)
-                else:
-                    errors.extend(result.errors)
+            print(f"Generating {len(tasks)} subtopics in parallel...")
+            all_results = await asyncio.gather(*tasks, return_exceptions=True)
+
+            # Process results from all subtopics
+            for subtopic, results in zip(subtopic_names, all_results):
+                if isinstance(results, Exception):
+                    errors.append(f"Error generating {subtopic}: {str(results)}")
+                    continue
+
+                for result in results:
+                    if result.accepted and result.question:
+                        # Question is already a dict from pipeline
+                        q_dict = result.question if isinstance(result.question, dict) else result.question.model_dump(mode="json")
+                        questions_by_subtopic[subtopic].append(q_dict)
+                    else:
+                        errors.extend(result.errors)
+
+        # Flatten all questions
+        for subtopic, questions in questions_by_subtopic.items():
+            all_questions.extend(questions)
+            actual = len(questions)
+            target = subtopic_questions.get(subtopic, 0)
+            if actual < target:
+                print(f"Warning: {subtopic} has {actual}/{target} questions after {max_retry_rounds} retries")
 
         return {
             "success": True,
