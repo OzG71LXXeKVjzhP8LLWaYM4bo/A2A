@@ -353,6 +353,114 @@ For Critical Thinking (strengthen/weaken argument) questions:
     "explanation": "Explanation with <strong>HTML</strong> formatting",
     "tags": ["Thinking Skills", "Critical Thinking"]
 }"""
+        elif subtopic_name == "Logical Reasoning":
+            format_instructions = """
+## OUTPUT FORMAT (NSW Selective Exam - Logical Reasoning)
+
+For Logical Reasoning (constraint satisfaction / logic puzzles), you MUST split content and question:
+
+{
+    "setup_elements": ["puzzle scenario", "what needs to be determined"],
+    "question_stem_structure": "Determine the correct arrangement/order/pairing",
+    "constraints": ["clue 1", "clue 2", "clue 3", "clue 4"],
+    "correct_answer_reasoning": "Step-by-step logical deduction",
+    "solution_steps": [{"step_number": 1, "description": "...", "reasoning": "..."}],
+    "requires_image": false,
+    "image_spec": null,
+    "content": "PUZZLE SETUP AND ALL CLUES GO HERE.\\n\\nExample format:\\nFive students – Amelia, Ben, Chloe, Daniel, and Emily – each chose a different activity.\\n\\n• Clue 1: Amelia doesn't like sports.\\n• Clue 2: Ben attends swimming.\\n• Clue 3: Chloe is in the cricket team.\\n• Clue 4: Daniel is not in Mr. Carter's class.",
+    "question_text": "Which of the following statements must be true?",
+    "choices": [
+        {"id": "1", "text": "Correct deduction from clues"},
+        {"id": "2", "text": "Plausible but contradicts a clue"},
+        {"id": "3", "text": "Could be true but not necessarily"},
+        {"id": "4", "text": "Contradicts multiple clues"}
+    ],
+    "explanation": "Step-by-step explanation with <strong>HTML</strong> formatting",
+    "tags": ["Thinking Skills", "Logical Reasoning"]
+}
+
+CRITICAL: The 'content' field MUST contain the puzzle setup and ALL clues. The 'question_text' field should ONLY contain the question being asked (e.g., "Which statement must be true?"). Do NOT put clues in question_text."""
+        elif subtopic_name == "Numerical Reasoning":
+            format_instructions = """
+## OUTPUT FORMAT (NSW Selective Exam - Numerical Reasoning)
+
+For Numerical Reasoning (number patterns, sequences, mathematical logic):
+
+{
+    "setup_elements": ["pattern or sequence context", "what needs to be found"],
+    "question_stem_structure": "Find the pattern / next number / missing value",
+    "constraints": ["pattern rules", "given values"],
+    "correct_answer_reasoning": "How the pattern works",
+    "solution_steps": [{"step_number": 1, "description": "...", "reasoning": "..."}],
+    "requires_image": false,
+    "image_spec": null,
+    "content": "THE PROBLEM SETUP GOES HERE.\\n\\nExample: A sequence follows a specific rule. The first five terms are:\\n2, 6, 18, 54, 162\\n\\nAnother example: In a number grid, each row and column follows a pattern.",
+    "question_text": "What is the next number in the sequence?",
+    "choices": [
+        {"id": "1", "text": "Correct answer"},
+        {"id": "2", "text": "Common arithmetic mistake"},
+        {"id": "3", "text": "Wrong pattern identified"},
+        {"id": "4", "text": "Calculation error"}
+    ],
+    "explanation": "Clear explanation with <strong>HTML</strong> formatting showing the pattern",
+    "tags": ["Thinking Skills", "Numerical Reasoning"]
+}
+
+CRITICAL: The 'content' field MUST contain the sequence, pattern, or problem setup. The 'question_text' should ONLY contain the question. Do NOT put the sequence/pattern in question_text."""
+        elif subtopic_name == "Spatial Reasoning":
+            format_instructions = """
+## OUTPUT FORMAT (NSW Selective Exam - Spatial Reasoning)
+
+For Spatial Reasoning (3D visualization, rotations, views):
+
+{
+    "setup_elements": ["spatial scenario", "what transformation/view is needed"],
+    "question_stem_structure": "Identify the correct view/rotation/transformation",
+    "constraints": ["spatial constraints"],
+    "correct_answer_reasoning": "How the spatial transformation works",
+    "solution_steps": [{"step_number": 1, "description": "...", "reasoning": "..."}],
+    "requires_image": true,
+    "image_spec": "Description of 3D structure or spatial diagram needed",
+    "content": "A 3D structure is shown. Study the arrangement of blocks/shapes carefully.",
+    "question_text": "Which of the following shows the TOP view of this structure?",
+    "choices": [
+        {"id": "1", "text": "A"},
+        {"id": "2", "text": "B"},
+        {"id": "3", "text": "C"},
+        {"id": "4", "text": "D"}
+    ],
+    "explanation": "Explanation of spatial reasoning with <strong>HTML</strong> formatting",
+    "tags": ["Thinking Skills", "Spatial Reasoning"]
+}
+
+CRITICAL: The 'content' field should describe what the student is looking at. The 'question_text' asks what they need to identify."""
+        elif subtopic_name == "Pattern Recognition":
+            format_instructions = """
+## OUTPUT FORMAT (NSW Selective Exam - Pattern Recognition)
+
+For Pattern Recognition (visual/logical patterns, sequences):
+
+{
+    "setup_elements": ["pattern context", "what needs to be identified"],
+    "question_stem_structure": "Find the next element / missing piece / pattern rule",
+    "constraints": ["pattern rules"],
+    "correct_answer_reasoning": "How the pattern works",
+    "solution_steps": [{"step_number": 1, "description": "...", "reasoning": "..."}],
+    "requires_image": false,
+    "image_spec": null,
+    "content": "THE PATTERN OR SEQUENCE SETUP GOES HERE.\\n\\nExample: Look at the following sequence of shapes/symbols/letters and identify the pattern.",
+    "question_text": "What comes next in the pattern?",
+    "choices": [
+        {"id": "1", "text": "Correct next element"},
+        {"id": "2", "text": "Wrong pattern interpretation"},
+        {"id": "3", "text": "Partial pattern match"},
+        {"id": "4", "text": "Random distractor"}
+    ],
+    "explanation": "Explanation with <strong>HTML</strong> formatting",
+    "tags": ["Thinking Skills", "Pattern Recognition"]
+}
+
+CRITICAL: The 'content' field MUST contain the pattern/sequence. The 'question_text' should ONLY ask the question."""
         else:
             format_instructions = f"""
 ## OUTPUT FORMAT (NSW Selective Exam)
@@ -365,8 +473,8 @@ For Critical Thinking (strengthen/weaken argument) questions:
     "solution_steps": [{{"step_number": 1, "description": "First step", "reasoning": "Why needed"}}],
     "requires_image": {str(requires_image).lower()},
     "image_spec": {"'Description of needed image'" if requires_image else "null"},
-    "content": "Setup/context if needed, or null",
-    "question_text": "The complete question being asked?",
+    "content": "Setup/context MUST go here - do NOT set to null",
+    "question_text": "The question being asked (NOT the setup)?",
     "choices": [
         {{"id": "1", "text": "Correct answer"}},
         {{"id": "2", "text": "Wrong answer 1", "misconception": "Error that leads here"}},
@@ -375,7 +483,9 @@ For Critical Thinking (strengthen/weaken argument) questions:
     ],
     "explanation": "Clear explanation with <strong>HTML</strong> formatting",
     "tags": ["Thinking Skills", "{subtopic_name}"]
-}}"""
+}}
+
+CRITICAL: The 'content' field should contain the problem setup/context. The 'question_text' should only contain the actual question."""
 
         # Build the complete prompt
         prompt = f"""You are creating a NSW Selective Schools exam question (Year 6 level, Thinking Skills).
