@@ -154,8 +154,9 @@ class OrchestratorAgent(BaseAgent):
         for q in questions:
             q["topic_id"] = topic_id
 
-        # Step 2: Generate images for questions that need them
-        questions_needing_images = [q for q in questions if q.get("requires_image")]
+        # Step 2: Generate images for questions that need them (if enabled)
+        enable_images = exam_config.get("enable_images", True)
+        questions_needing_images = [q for q in questions if q.get("requires_image")] if enable_images else []
 
         if questions_needing_images:
             result["steps"].append({
@@ -167,17 +168,19 @@ class OrchestratorAgent(BaseAgent):
             for q in questions_needing_images:
                 image_result = await self._generate_image(q.get("image_description", ""))
                 if image_result.get("success"):
-                    image_url = f"data:image/png;base64,{image_result.get('image_base64', '')}"
-                    q["image_url"] = image_url
+                    # Image agent returns image_url (R2 URL), not base64
+                    image_url = image_result.get('image_url', '')
+                    if image_url:
+                        q["image_url"] = image_url
 
-                    # Insert image into the question content for rendering
-                    img_tag = f'<div class="question-image"><img src="{image_url}" alt="Question diagram"></div>'
+                        # Insert image into the question content for rendering
+                        img_tag = f'<div class="question-image"><img src="{image_url}" alt="Question diagram"></div>'
 
-                    # Add image to content field (before the question text)
-                    if q.get("content"):
-                        q["content"] = img_tag + "\n" + q["content"]
-                    else:
-                        q["content"] = img_tag
+                        # Add image to content field (before the question text)
+                        if q.get("content"):
+                            q["content"] = img_tag + "\n" + q["content"]
+                        else:
+                            q["content"] = img_tag
 
             result["steps"][-1]["status"] = "completed"
 
