@@ -29,7 +29,8 @@ This project implements a multi-agent architecture using Google's [A2A Protocol]
 
 ## Features
 
-- **NSW Exam Formats**: Questions match authentic NSW Selective High School Placement Test patterns
+- **NSW Exam Formats**: Questions match authentic NSW Selective High School Placement Test patterns for both Thinking Skills and Mathematics
+- **Two Exam Types**: Thinking Skills (40 questions, 4 choices) and Mathematics (35 questions, 5 choices)
 - **Multi-Agent Pipeline**: ConceptGuide → QuestionGenerator → QualityChecker with feedback loop
 - **Parallel Generation**: All subtopics generated concurrently for 3-5x faster exam creation
 - **A2A Protocol**: Standard inter-agent communication via JSON-RPC over HTTP
@@ -43,6 +44,8 @@ This project implements a multi-agent architecture using Google's [A2A Protocol]
 
 ## NSW Exam Question Formats
 
+### Thinking Skills Exam (40 questions, 45 minutes)
+
 The generator produces questions matching authentic NSW Selective test patterns (based on Practice Test 1 analysis):
 
 | Subtopic | Count | Format | Example |
@@ -54,7 +57,24 @@ The generator produces questions matching authentic NSW Selective test patterns 
 | **Numerical Reasoning** | 8 | Multi-step word problems | Rate problems, optimization, working backwards |
 | **Spatial Reasoning** | 6 | Visual patterns and shapes | Net folding, cube views, shape transformation |
 
-**Total: 40 questions** (matching NSW Selective exam)
+**Total: 40 questions, 4 choices (A-D)**
+
+### Mathematics Exam (35 questions, 40 minutes)
+
+NSW Selective Mathematics exam with Australian context and 5 answer choices (A-E):
+
+| Subtopic | Count | Format | Example |
+|----------|-------|--------|---------|
+| **Number Operations** | 5 | Order of operations, mental math | "Calculate: 24 × 5 + 36 ÷ 4" |
+| **Number Theory** | 4 | Factors, multiples, primes, divisibility | "What is the LCM of 12 and 18?" |
+| **Fractions & Decimals** | 5 | Fraction operations, comparisons, conversions | "Andy ate 1/5, Bella 2/5, Carlo the rest. Who ate most?" |
+| **Algebra & Patterns** | 5 | Symbol equations, sequences, expressions | "If □ × 9 = 108 and △ + □ = 36, what is △?" |
+| **Measurement** | 5 | Time, scales, capacity, unit conversions | "A watch reads 1850. What time is it in 12-hour format?" |
+| **Data & Statistics** | 4 | Mean, median, mode, range, tables | "Test scores: 85, 92, 78, 88, 92. What is the mean?" |
+| **Geometry** | 4 | Angles, area, perimeter, coordinates | "A triangle has angles 35° and 72°. Find the third angle." |
+| **Probability** | 3 | Simple/combined events, experimental probability | "A bag has 5 red, 3 blue marbles. P(blue)?" |
+
+**Total: 35 questions, 5 choices (A-E)** with Australian context (AUD currency, metric units, Australian names/places)
 
 ## Requirements
 
@@ -128,17 +148,26 @@ uv run python main.py quality_checker
 ### Generate an Exam
 
 ```bash
-# Generate a Thinking Skills exam
+# Generate a Thinking Skills exam (40 questions, 45 min)
 curl -X POST http://localhost:5000/api/exams/thinking-skills \
   -H "Content-Type: application/json" \
   -d '{
-    "exam_name": "Practice Test 1",
-    "time_limit": 45,
+    "exam_name": "Thinking Skills Practice",
     "enable_images": true,
-    "analogies_count": 4,
-    "pattern_recognition_count": 5,
-    "logical_count": 5,
-    "spatial_reasoning_count": 4
+    "critical_thinking_count": 7,
+    "logical_reasoning_count": 11,
+    "deduction_count": 4,
+    "inference_count": 4,
+    "numerical_reasoning_count": 8,
+    "spatial_reasoning_count": 6
+  }'
+
+# Generate a Mathematics exam (35 questions, 40 min)
+curl -X POST http://localhost:5000/api/exams/math \
+  -H "Content-Type: application/json" \
+  -d '{
+    "exam_name": "Math Practice",
+    "enable_images": false
   }'
 ```
 
@@ -197,12 +226,24 @@ POST /api/exams/math
 Content-Type: application/json
 
 {
-  "geometry_count": 5,
-  "fractions_count": 4,
-  "percentages_count": 4,
-  ...
+  "number_operations_count": 5,
+  "number_theory_count": 4,
+  "fractions_decimals_count": 5,
+  "algebra_patterns_count": 5,
+  "measurement_count": 5,
+  "data_statistics_count": 4,
+  "geometry_count": 4,
+  "probability_count": 3,
+  "enable_images": false,
+  "custom_instructions": ""
 }
 ```
+
+Default generates 35 questions (matching NSW Selective Mathematics exam distribution).
+
+**Note**: Math questions use 5 answer choices (A-E) instead of 4 (A-D) used in Thinking Skills.
+
+**Performance**: ~60-90 seconds for 35 questions (parallel subtopic generation).
 
 ## Agents
 
@@ -217,23 +258,33 @@ The main coordinator that:
 ### Concept Guide Agent (Port 5001)
 
 Manages the concept curriculum and selects what to test:
-- Loads concept definitions from `data/concepts/`
-- Selects appropriate concepts based on subtopic and difficulty
+- Loads concept definitions from `data/concepts/thinking_skills/` and `data/concepts/math/`
+- Selects appropriate concepts based on subtopic, difficulty, and exam type
 - Tracks misconceptions for distractor design
 - Provides concept context to the question generator
+
+**Supported exam types:**
+- `thinking_skills` - 6 subtopics (Critical Thinking, Logical Reasoning, Deduction, Inference, Numerical Reasoning, Spatial Reasoning)
+- `math` - 8 subtopics (Number Operations, Number Theory, Fractions & Decimals, Algebra & Patterns, Measurement, Data & Statistics, Geometry, Probability)
 
 ### Question Generator Agent (Port 5002)
 
 Creates questions using NSW Selective exam formats:
-- Loads subtopic-specific prompts from `prompts/thinking-skills/subtopics/`
+- Loads subtopic-specific prompts from `prompts/thinking-skills/subtopics/` and `prompts/math/subtopics/`
 - Uses format templates matching real NSW exams (boxed premises, character dialogues)
 - Generates blueprint + realized question in one step
 - Handles revision requests from quality checker
+- Automatically adjusts choice count: 4 (A-D) for Thinking Skills, 5 (A-E) for Math
 
-**Subtopic-specific formats:**
+**Thinking Skills formats:**
 - **Deduction**: HTML box with premise, character statements, "Whose reasoning is correct?"
 - **Inference**: Premise content + character portrait with flawed statement
 - **Critical Thinking**: Argument + strengthen/weaken analysis
+
+**Math formats:**
+- **Symbol equations**: □ × 9 = 108, △ + □ = 36
+- **Working backwards**: Given mean/total, find missing values
+- **Multi-step word problems**: Australian context (AUD, km, L, Australian names)
 
 ### Quality Checker Agent (Port 5003)
 
@@ -338,18 +389,33 @@ A2A/
 │
 ├── data/
 │   └── concepts/
-│       └── thinking_skills/  # Concept definitions per subtopic
-│           ├── deduction.json
-│           ├── inference.json
-│           ├── critical_thinking.json
-│           └── ...
+│       ├── thinking_skills/  # Thinking Skills concepts
+│       │   ├── deduction.json
+│       │   ├── inference.json
+│       │   ├── critical_thinking.json
+│       │   └── ...
+│       └── math/             # Mathematics concepts (8 subtopics)
+│           ├── number_operations.json
+│           ├── number_theory.json
+│           ├── fractions_decimals.json
+│           ├── algebra_patterns.json
+│           ├── measurement.json
+│           ├── data_statistics.json
+│           ├── geometry.json
+│           └── probability.json
 │
 ├── prompts/
-│   └── thinking-skills/
-│       └── subtopics/      # NSW exam format prompts
-│           ├── deduction.md    # "Whose reasoning is correct?"
-│           ├── inference.md    # "Which sentence shows the mistake?"
-│           ├── critical_thinking.md
+│   ├── thinking-skills/
+│   │   └── subtopics/      # Thinking Skills prompts
+│   │       ├── deduction.md
+│   │       ├── inference.md
+│   │       ├── critical_thinking.md
+│   │       └── ...
+│   └── math/
+│       └── subtopics/      # Math prompts (8 subtopics)
+│           ├── number_operations.md
+│           ├── algebra_patterns.md
+│           ├── measurement.md
 │           └── ...
 │
 └── tests/

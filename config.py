@@ -111,9 +111,10 @@ class Config(BaseModel):
     }
 
     # Mathematics subtopic UUIDs (NSW Selective exam - 35 questions, 40 minutes)
+    # UUIDs match the production database
     math_subtopics: dict = {
         "geometry": {
-            "id": "a1b2c3d4-1111-4000-8000-000000000001",
+            "id": "322a14b2-933a-4e5f-8830-8a8a4a426a4d",
             "name": "Geometry",
             "display_name": "Geometry",
         },
@@ -123,27 +124,27 @@ class Config(BaseModel):
             "display_name": "Number Operations",
         },
         "measurement": {
-            "id": "a1b2c3d4-3333-4000-8000-000000000003",
+            "id": "051a679e-8e19-420f-af9d-7df4d1ce4ff4",
             "name": "Measurement",
             "display_name": "Measurement",
         },
         "algebra_patterns": {
-            "id": "a1b2c3d4-4444-4000-8000-000000000004",
+            "id": "cc17b7cd-965d-46a0-b2f2-718d7c10662f",
             "name": "Algebra & Patterns",
             "display_name": "Algebra & Patterns",
         },
         "fractions_decimals": {
-            "id": "a1b2c3d4-5555-4000-8000-000000000005",
+            "id": "76664fb2-a646-43c0-9497-daa05d8b54c3",
             "name": "Fractions & Decimals",
             "display_name": "Fractions & Decimals",
         },
         "probability": {
-            "id": "a1b2c3d4-6666-4000-8000-000000000006",
+            "id": "837ce079-4ace-45e5-9713-ca2f9d3f135d",
             "name": "Probability",
             "display_name": "Probability",
         },
         "data_statistics": {
-            "id": "a1b2c3d4-7777-4000-8000-000000000007",
+            "id": "f371e282-da33-44ec-99c7-b5ec1cca24a5",
             "name": "Data & Statistics",
             "display_name": "Data & Statistics",
         },
