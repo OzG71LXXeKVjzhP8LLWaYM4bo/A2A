@@ -184,73 +184,78 @@ class OrchestratorAgent(BaseAgent):
 
             result["steps"][-1]["status"] = "completed"
 
-        # Step 3: Insert questions to database
-        result["steps"].append({"step": "insert_questions", "status": "in_progress"})
+        # Step 3: Insert questions to database (skip if skip_database=True)
+        skip_database = exam_config.get("skip_database", False)
 
-        db_result = await self._insert_questions(questions)
-
-        if not db_result.get("success"):
-            result["steps"][-1]["status"] = "failed"
-            result["steps"][-1]["error"] = db_result.get("error", "Database error")
-            # Continue anyway - questions were generated
+        if skip_database:
+            result["steps"].append({"step": "insert_questions", "status": "skipped"})
         else:
-            result["steps"][-1]["status"] = "completed"
-            result["steps"][-1]["inserted_count"] = db_result.get("inserted_count", 0)
-            question_ids = db_result.get("inserted_ids", [])
+            result["steps"].append({"step": "insert_questions", "status": "in_progress"})
 
-            # Step 4: Create exam record
-            result["steps"].append({"step": "create_exam", "status": "in_progress"})
+            db_result = await self._insert_questions(questions)
 
-            topic_id = config.topic_uuids.get(exam_type)
-            # Convert exam_type to hyphenated format for database (e.g., "thinking_skills" -> "thinking-skills")
-            exam_type_db = exam_type.replace("_", "-")
-
-            # Default time limits per exam type (NSW Selective format)
-            default_time_limits = {
-                "thinking_skills": 45,  # 45 minutes, 40 questions
-                "math": 40,             # 40 minutes, 35 questions
-                "reading": 40,          # 40 minutes, 30 questions
-            }
-            default_time = default_time_limits.get(exam_type, 45)
-
-            exam_result = await self._create_exam(
-                exam_data={
-                    "code": exam_code,
-                    "name": exam_name,
-                    "description": exam_config.get("exam_description", ""),
-                    "type": exam_type_db,
-                    "time_limit": exam_config.get("time_limit", default_time),
-                    "question_count": len(question_ids),
-                    "topic_id": topic_id,
-                },
-                question_ids=question_ids,
-            )
-
-            if exam_result.get("success"):
-                result["steps"][-1]["status"] = "completed"
-                result["exam_id"] = exam_result.get("exam_id")
-
-                # Step 5: Add exam to pack if pack_id provided
-                pack_id = exam_config.get("pack_id")
-                if pack_id and result.get("exam_id"):
-                    result["steps"].append({"step": "add_to_pack", "status": "in_progress"})
-
-                    pack_result = await self._add_exam_to_pack(
-                        exam_id=result["exam_id"],
-                        pack_id=pack_id,
-                    )
-
-                    if pack_result.get("success"):
-                        result["steps"][-1]["status"] = "completed"
-                        result["steps"][-1]["pack_id"] = pack_id
-                        result["steps"][-1]["exam_order"] = pack_result.get("exam_order")
-                        result["pack_id"] = pack_id
-                    else:
-                        result["steps"][-1]["status"] = "failed"
-                        result["steps"][-1]["error"] = pack_result.get("error", "")
-            else:
+            if not db_result.get("success"):
                 result["steps"][-1]["status"] = "failed"
-                result["steps"][-1]["error"] = exam_result.get("error", "")
+                result["steps"][-1]["error"] = db_result.get("error", "Database error")
+                # Continue anyway - questions were generated
+            else:
+                result["steps"][-1]["status"] = "completed"
+                result["steps"][-1]["inserted_count"] = db_result.get("inserted_count", 0)
+                question_ids = db_result.get("inserted_ids", [])
+
+                # Step 4: Create exam record
+                result["steps"].append({"step": "create_exam", "status": "in_progress"})
+
+                topic_id = config.topic_uuids.get(exam_type)
+                # Convert exam_type to hyphenated format for database (e.g., "thinking_skills" -> "thinking-skills")
+                exam_type_db = exam_type.replace("_", "-")
+
+                # Default time limits per exam type (NSW Selective format)
+                default_time_limits = {
+                    "thinking_skills": 45,  # 45 minutes, 40 questions
+                    "math": 40,             # 40 minutes, 35 questions
+                    "reading": 40,          # 40 minutes, 30 questions
+                }
+                default_time = default_time_limits.get(exam_type, 45)
+
+                exam_result = await self._create_exam(
+                    exam_data={
+                        "code": exam_code,
+                        "name": exam_name,
+                        "description": exam_config.get("exam_description", ""),
+                        "type": exam_type_db,
+                        "time_limit": exam_config.get("time_limit", default_time),
+                        "question_count": len(question_ids),
+                        "topic_id": topic_id,
+                    },
+                    question_ids=question_ids,
+                )
+
+                if exam_result.get("success"):
+                    result["steps"][-1]["status"] = "completed"
+                    result["exam_id"] = exam_result.get("exam_id")
+
+                    # Step 5: Add exam to pack if pack_id provided
+                    pack_id = exam_config.get("pack_id")
+                    if pack_id and result.get("exam_id"):
+                        result["steps"].append({"step": "add_to_pack", "status": "in_progress"})
+
+                        pack_result = await self._add_exam_to_pack(
+                            exam_id=result["exam_id"],
+                            pack_id=pack_id,
+                        )
+
+                        if pack_result.get("success"):
+                            result["steps"][-1]["status"] = "completed"
+                            result["steps"][-1]["pack_id"] = pack_id
+                            result["steps"][-1]["exam_order"] = pack_result.get("exam_order")
+                            result["pack_id"] = pack_id
+                        else:
+                            result["steps"][-1]["status"] = "failed"
+                            result["steps"][-1]["error"] = pack_result.get("error", "")
+                else:
+                    result["steps"][-1]["status"] = "failed"
+                    result["steps"][-1]["error"] = exam_result.get("error", "")
 
         result["success"] = True
         result["total_questions"] = len(questions)
@@ -266,16 +271,23 @@ class OrchestratorAgent(BaseAgent):
 
         # Default distribution matching NSW Selective exam (40 questions)
         # Based on analysis of official Practice Test 1
+        default_counts = {
+            "critical_thinking": 7,      # Strengthen/weaken arguments
+            "deduction": 4,              # "Whose reasoning is correct?" (2 characters)
+            "inference": 4,              # "Which shows the mistake?" (1 character)
+            "logical_reasoning": 11,     # Conditionals, constraints, logic grids
+            "spatial_reasoning": 6,      # Visual patterns, shapes, transformations
+            "numerical_reasoning": 8,    # Word problems with calculations
+        }
+        # Total: 40 questions
+
+        # Build subtopic_questions from individual count params or use defaults
         if not subtopic_questions:
-            subtopic_questions = {
-                "critical_thinking": 7,      # Strengthen/weaken arguments
-                "deduction": 4,              # "Whose reasoning is correct?" (2 characters)
-                "inference": 4,              # "Which shows the mistake?" (1 character)
-                "logical_reasoning": 11,     # Conditionals, constraints, logic grids
-                "spatial_reasoning": 6,      # Visual patterns, shapes, transformations
-                "numerical_reasoning": 8,    # Word problems with calculations
-            }
-            # Total: 40 questions
+            subtopic_questions = {}
+            for subtopic, default_count in default_counts.items():
+                # Check for individual count param (e.g., "critical_thinking_count")
+                count_key = f"{subtopic}_count"
+                subtopic_questions[subtopic] = exam_config.get(count_key, default_count)
 
         all_questions = []
         errors = []
@@ -352,18 +364,26 @@ class OrchestratorAgent(BaseAgent):
 
         # Default distribution matching NSW Selective Math exam (35 questions)
         # Based on analysis of official Practice Test 1
+        default_counts = {
+            "math:geometry": 4,            # Area, perimeter, angles, shapes
+            "math:number_operations": 5,   # Place value, BODMAS, rounding
+            "math:measurement": 5,         # Time, scales, capacity, units
+            "math:algebra_patterns": 5,    # Symbol equations, sequences
+            "math:fractions_decimals": 5,  # Fraction ops, comparing, converting
+            "math:probability": 3,         # Simple and combined probability
+            "math:data_statistics": 4,     # Mean, median, mode, tables
+            "math:number_theory": 4,       # Factors, primes, divisibility
+        }
+        # Total: 35 questions
+
+        # Build subtopic_questions from individual count params or use defaults
         if not subtopic_questions:
-            subtopic_questions = {
-                "math:geometry": 9,            # Area, perimeter, angles, shapes
-                "math:number_operations": 6,   # Place value, BODMAS, rounding
-                "math:measurement": 6,         # Time, scales, capacity, units
-                "math:algebra_patterns": 6,    # Symbol equations, sequences
-                "math:fractions_decimals": 3,  # Fraction ops, comparing, converting
-                "math:probability": 2,         # Simple and combined probability
-                "math:data_statistics": 2,     # Mean, median, mode, tables
-                "math:number_theory": 1,       # Factors, primes, divisibility
-            }
-            # Total: 35 questions
+            subtopic_questions = {}
+            for subtopic, default_count in default_counts.items():
+                # Check for individual count param (e.g., "geometry_count")
+                # Remove "math:" prefix for param name
+                param_name = subtopic.replace("math:", "") + "_count"
+                subtopic_questions[subtopic] = exam_config.get(param_name, default_count)
 
         all_questions = []
         errors = []

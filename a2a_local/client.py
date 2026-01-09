@@ -174,4 +174,5 @@ AGENT_ENDPOINTS = {
     "concept_guide": AgentEndpoint("concept_guide", "http://localhost:5007", 5007),
     "question_generator": AgentEndpoint("question_generator", "http://localhost:5008", 5008),
     "quality_checker": AgentEndpoint("quality_checker", "http://localhost:5009", 5009),
+    "correctness": AgentEndpoint("correctness", "http://localhost:5010", 5010),
 }

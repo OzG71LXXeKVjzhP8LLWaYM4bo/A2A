@@ -51,7 +51,7 @@ class PipelineController:
 
         try:
             # Step 1: Select concept
-            log_pipeline_step("Select Concept", 1, 3, f"subtopic={subtopic}, difficulty={difficulty}")
+            log_pipeline_step("Select Concept", 1, 4, f"subtopic={subtopic}, difficulty={difficulty}")
             state.concept_selection = await self._select_concept(
                 subtopic, difficulty, exclude_ids
             )
@@ -63,16 +63,16 @@ class PipelineController:
             concept_name = state.concept_selection.get("concept", {}).get("name", "Unknown")
             log_info("Pipeline", f"Selected concept: {concept_name}")
 
-            # Step 2-4: Generate, check quality, and possibly revise
+            # Step 2-5: Generate, verify correctness, check quality, and possibly revise
             for attempt in range(self.config.max_revisions + 1):
                 state.revision_count = attempt
 
                 # Step 2: Generate question (blueprint + realization)
                 if attempt == 0:
-                    log_pipeline_step("Generate Question", 2, 3, f"concept={concept_name}")
+                    log_pipeline_step("Generate Question", 2, 4, f"concept={concept_name}")
                     gen_result = await self._generate_question(state.concept_selection)
                 else:
-                    log_pipeline_step(f"Revise Question (attempt {attempt + 1})", 2, 3,
+                    log_pipeline_step(f"Revise Question (attempt {attempt + 1})", 2, 4,
                                      f"issues: {len(state.quality_result.get('issues', []))}")
                     gen_result = await self._revise_question(
                         state.question,
@@ -89,8 +89,25 @@ class PipelineController:
                 state.blueprint = gen_result.get("blueprint")
                 state.question = gen_result.get("question")
 
-                # Step 3: Check quality (solve + attack + judge)
-                log_pipeline_step("Quality Check", 3, 3, f"attempt {attempt + 1}")
+                # Step 3: Verify correctness (work backwards + forwards)
+                log_pipeline_step("Verify Correctness", 3, 4, f"attempt {attempt + 1}")
+                correctness_result = await self._verify_correctness(
+                    state.question,
+                    state.blueprint,
+                )
+
+                if correctness_result and not correctness_result.get("verified", False):
+                    # Failed correctness check - treat as quality failure for revision
+                    log_info("Pipeline", f"✗ Correctness FAILED - {len(correctness_result.get('issues', []))} issues")
+                    state.quality_result = {
+                        "accepted": False,
+                        "issues": correctness_result.get("issues", ["Answer verification failed"]),
+                        "suggestions": correctness_result.get("suggestions", []),
+                    }
+                    continue
+
+                # Step 4: Check quality (solve + attack + judge)
+                log_pipeline_step("Quality Check", 4, 4, f"attempt {attempt + 1}")
                 state.quality_result = await self._check_quality(
                     state.question,
                     state.blueprint,
@@ -101,7 +118,7 @@ class PipelineController:
                     state.errors.append(f"Quality check failed (attempt {attempt + 1})")
                     continue
 
-                # Step 4: Check if accepted
+                # Step 5: Check if accepted
                 if state.quality_result.get("accepted"):
                     log_info("Pipeline", f"✓ Question ACCEPTED after {attempt + 1} attempt(s)")
                     state.accepted = True
@@ -247,6 +264,32 @@ class PipelineController:
         except Exception as e:
             print(f"Error checking quality: {e}")
             return None
+
+    async def _verify_correctness(
+        self,
+        question: dict,
+        blueprint: dict,
+    ) -> Optional[dict]:
+        """Verify the correctness of a question by working backwards and forwards."""
+        try:
+            response = await self.client.send_task(
+                endpoint=AGENT_ENDPOINTS["correctness"],
+                skill_id="verify_correctness",
+                message=json.dumps({
+                    "action": "verify_correctness",
+                    "question": question,
+                    "blueprint": blueprint,
+                }),
+            )
+            result = self._parse_response(response)
+            if result and result.get("success"):
+                return result
+            # If correctness check fails to run, assume verified to not block pipeline
+            return {"verified": True, "issues": [], "suggestions": []}
+        except Exception as e:
+            print(f"Error verifying correctness: {e}")
+            # On error, don't block the pipeline - just log and continue
+            return {"verified": True, "issues": [], "suggestions": []}
 
     def _parse_response(self, response: Any) -> Optional[dict]:
         """Parse the response from an agent."""

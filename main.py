@@ -53,10 +53,15 @@ async def run_agent(agent_name: str):
         agent = QualityCheckerAgent()
         await agent.run()
 
+    elif agent_name == "correctness":
+        from agents.correctness_agent import CorrectnessAgent
+        agent = CorrectnessAgent()
+        await agent.run()
+
     else:
         print(f"Unknown agent: {agent_name}")
         print("Core: orchestrator, image, database, verifier")
-        print("Pipeline: concept_guide, question_generator, quality_checker")
+        print("Pipeline: concept_guide, question_generator, quality_checker, correctness")
         sys.exit(1)
 
 
@@ -74,6 +79,7 @@ async def run_all():
     print(f"  Concept Guide:        http://localhost:{config.ports.concept_guide}")
     print(f"  Question Generator:   http://localhost:{config.ports.question_generator}")
     print(f"  Quality Checker:      http://localhost:{config.ports.quality_checker}")
+    print(f"  Correctness:          http://localhost:{config.ports.correctness}")
     print()
 
     tasks = [
@@ -84,6 +90,7 @@ async def run_all():
         run_agent("concept_guide"),
         run_agent("question_generator"),
         run_agent("quality_checker"),
+        run_agent("correctness"),
     ]
 
     await asyncio.gather(*tasks)
@@ -104,8 +111,9 @@ def main():
         print(f"  concept_guide        - Concept selection (port {config.ports.concept_guide})")
         print(f"  question_generator   - Blueprint + question (port {config.ports.question_generator})")
         print(f"  quality_checker      - Solve + attack + judge (port {config.ports.quality_checker})")
+        print(f"  correctness          - Answer verification (port {config.ports.correctness})")
         print()
-        print("  all                  - Run all 7 agents")
+        print("  all                  - Run all 8 agents")
         sys.exit(1)
 
     agent_name = sys.argv[1].lower()

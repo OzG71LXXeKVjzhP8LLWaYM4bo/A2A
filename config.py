@@ -40,6 +40,7 @@ class AgentPorts(BaseModel):
     concept_guide: int = 5007
     question_generator: int = 5008  # Merged: planner + realiser
     quality_checker: int = 5009     # Merged: solver + adversarial + judge
+    correctness: int = 5010         # Verifies answer correctness
 
 
 class R2Config(BaseModel):
