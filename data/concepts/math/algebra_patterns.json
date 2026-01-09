@@ -1,0 +1,117 @@
+{
+  "subtopic_id": "a1b2c3d4-4444-4000-8000-000000000004",
+  "subtopic_name": "Algebra & Patterns",
+  "display_name": "Algebra & Patterns",
+  "topic_id": "64cc2488-91f0-43e3-a560-b2bccf91442c",
+  "topic_name": "Mathematics",
+  "description": "Number patterns, sequences, symbol equations, simultaneous equations, and algebraic reasoning.",
+  "typically_requires_image": false,
+  "concepts": [
+    {
+      "id": "symbol-equations",
+      "name": "Symbol Equations",
+      "description": "Solving equations where symbols represent unknown numbers",
+      "difficulty_min": 2,
+      "difficulty_max": 3,
+      "bloom_levels": ["application", "analysis"],
+      "common_misconceptions": [
+        "Not keeping symbol values consistent",
+        "Substitution errors",
+        "Solving in wrong order"
+      ],
+      "question_patterns": [
+        "If {symbol1} x {A} = {B} and {symbol2} + {symbol1} = {C}, what is {symbol2}?",
+        "In the equations below, find the value of {symbol}."
+      ],
+      "example_stems": [
+        "Square always represents the same number. If 9 x square = 108 and triangle + square = 36, what is triangle?",
+        "If star = 5 and star + moon = 12, what is moon?"
+      ]
+    },
+    {
+      "id": "simultaneous-visual",
+      "name": "Visual Simultaneous Equations",
+      "description": "Solving systems where items (stars, hearts, boxes) have point values",
+      "difficulty_min": 2,
+      "difficulty_max": 3,
+      "bloom_levels": ["analysis", "evaluation"],
+      "common_misconceptions": [
+        "Not setting up equations correctly from visuals",
+        "Arithmetic errors in elimination",
+        "Confusing items in final calculation"
+      ],
+      "question_patterns": [
+        "If {X} stars and {Y} hearts = {A} points, and {P} stars and {Q} hearts = {B} points, what is 1 star + 1 heart?",
+        "Three boxes weighed in pairs give {A}, {B}, {C}. What do all three weigh together?"
+      ],
+      "example_stems": [
+        "3 stars and 5 hearts = 27 points. 5 stars and 7 hearts = 41 points. What is 1 star + 1 heart?",
+        "Boxes weighed in pairs: 28kg, 32kg, 38kg. Combined weight of all three?"
+      ]
+    },
+    {
+      "id": "number-patterns",
+      "name": "Number Patterns and Sequences",
+      "description": "Finding rules, extending sequences, finding missing terms",
+      "difficulty_min": 2,
+      "difficulty_max": 3,
+      "bloom_levels": ["analysis", "evaluation"],
+      "common_misconceptions": [
+        "Assuming pattern is always linear",
+        "Not checking pattern works for all given terms",
+        "Errors with patterns involving multiple operations"
+      ],
+      "question_patterns": [
+        "In pattern: {sequence}, what is the {nth} term?",
+        "Each term is sum of previous {n} terms. Find missing value.",
+        "What is the rule for this sequence?"
+      ],
+      "example_stems": [
+        "Pattern: 2, X, 0, Y, 6, Z. Each number is sum of previous three. What is Z?",
+        "Sequence: 3, 7, 15, 31, ___. What comes next?"
+      ]
+    },
+    {
+      "id": "algebraic-expressions",
+      "name": "Algebraic Expressions",
+      "description": "Translating word problems into expressions, evaluating expressions",
+      "difficulty_min": 2,
+      "difficulty_max": 3,
+      "bloom_levels": ["application", "analysis"],
+      "common_misconceptions": [
+        "Reversing subtraction order",
+        "Confusing 'more than' with 'less than'",
+        "Not grouping correctly"
+      ],
+      "question_patterns": [
+        "Tom is {X} years older than Sam. If Sam is {Y}, how old is Tom?",
+        "Write an expression for: {word problem}"
+      ],
+      "example_stems": [
+        "A rectangle's length is 3 more than twice its width. If width is w, what is perimeter?",
+        "There are n boys and twice as many girls. Total students?"
+      ]
+    },
+    {
+      "id": "perimeter-algebra",
+      "name": "Perimeter with Unknown Dimensions",
+      "description": "Finding dimensions when perimeter changes by adding shapes",
+      "difficulty_min": 2,
+      "difficulty_max": 3,
+      "bloom_levels": ["analysis", "evaluation"],
+      "common_misconceptions": [
+        "Not accounting for hidden edges when shapes join",
+        "Incorrect equation setup",
+        "Errors calculating change in perimeter"
+      ],
+      "question_patterns": [
+        "Shape X has perimeter {P1}. Adding a rectangle makes shape Y with perimeter {P2}. What is the rectangle's width?",
+        "Two identical rectangles joined side-by-side. New perimeter is {P}. Find width."
+      ],
+      "example_stems": [
+        "Shape X has perimeter 64cm. Adding a card makes shape Y with perimeter 82cm. Find width of cards.",
+        "Two squares joined: perimeter 24cm. What is side length of each square?"
+      ]
+    }
+  ]
+}

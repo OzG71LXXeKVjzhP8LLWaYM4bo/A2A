@@ -20,8 +20,13 @@ from models import (
 )
 from config import config
 
-# Path to prompts directory
-PROMPTS_DIR = Path(__file__).parent.parent / "prompts" / "thinking-skills" / "subtopics"
+# Paths to prompts directories by topic
+PROMPTS_DIRS = {
+    "thinking_skills": Path(__file__).parent.parent / "prompts" / "thinking-skills" / "subtopics",
+    "math": Path(__file__).parent.parent / "prompts" / "math" / "subtopics",
+}
+# Backwards compatible default
+PROMPTS_DIR = PROMPTS_DIRS["thinking_skills"]
 
 
 class QuestionGeneratorAgent(BaseAgent):
@@ -50,18 +55,27 @@ class QuestionGeneratorAgent(BaseAgent):
         super().__init__(agent_config)
         self._prompt_cache: dict[str, str] = {}
 
-    def _load_subtopic_prompt(self, subtopic_name: str) -> Optional[str]:
-        """Load the subtopic-specific prompt from markdown files."""
-        if subtopic_name in self._prompt_cache:
-            return self._prompt_cache[subtopic_name]
+    def _load_subtopic_prompt(self, subtopic_name: str, topic: str = "thinking_skills") -> Optional[str]:
+        """Load the subtopic-specific prompt from markdown files.
+
+        Args:
+            subtopic_name: The subtopic name (e.g., "Geometry", "Logical Reasoning")
+            topic: The topic namespace ("thinking_skills" or "math")
+        """
+        cache_key = f"{topic}:{subtopic_name}"
+        if cache_key in self._prompt_cache:
+            return self._prompt_cache[cache_key]
 
         # Convert subtopic name to filename (e.g., "Logical Reasoning" -> "logical_reasoning.md")
-        filename = subtopic_name.lower().replace(" ", "_") + ".md"
-        prompt_path = PROMPTS_DIR / filename
+        filename = subtopic_name.lower().replace(" ", "_").replace("&", "and") + ".md"
+
+        # Try the topic-specific directory first
+        prompts_dir = PROMPTS_DIRS.get(topic, PROMPTS_DIR)
+        prompt_path = prompts_dir / filename
 
         if prompt_path.exists():
             content = prompt_path.read_text()
-            self._prompt_cache[subtopic_name] = content
+            self._prompt_cache[cache_key] = content
             return content
         return None
 
@@ -92,6 +106,13 @@ class QuestionGeneratorAgent(BaseAgent):
         else:
             return {"error": f"Unknown action: {action}"}
 
+    def _detect_topic(self, concept_data: dict) -> str:
+        """Detect the topic from concept data (thinking_skills or math)."""
+        topic_name = concept_data.get("topic_name", "").lower()
+        if "math" in topic_name:
+            return "math"
+        return "thinking_skills"
+
     async def generate_question(self, selection_data: dict) -> dict:
         """Generate a complete question from a concept selection."""
         try:
@@ -101,6 +122,9 @@ class QuestionGeneratorAgent(BaseAgent):
             selected_misconceptions = selection_data.get("selected_misconceptions", [])
             selected_pattern = selection_data.get("selected_pattern")
 
+            # Detect topic (thinking_skills or math)
+            topic = self._detect_topic(concept_data)
+
             # Generate blueprint and question in one prompt
             prompt = self._build_generation_prompt(
                 concept_data=concept_data,
@@ -108,6 +132,7 @@ class QuestionGeneratorAgent(BaseAgent):
                 target_bloom=target_bloom,
                 selected_misconceptions=selected_misconceptions,
                 selected_pattern=selected_pattern,
+                topic=topic,
             )
 
             result_data = await self.generate_json(prompt, temperature=0.7)
@@ -116,8 +141,8 @@ class QuestionGeneratorAgent(BaseAgent):
                 return {"success": False, "error": "Failed to generate question"}
 
             # Parse into models
-            blueprint = self._parse_blueprint(result_data, concept_data, target_difficulty)
-            question = self._parse_question(result_data, blueprint)
+            blueprint = self._parse_blueprint(result_data, concept_data, target_difficulty, topic)
+            question = self._parse_question(result_data, blueprint, topic)
 
             return {
                 "success": True,
@@ -188,10 +213,22 @@ class QuestionGeneratorAgent(BaseAgent):
         target_bloom: str,
         selected_misconceptions: list[str],
         selected_pattern: str = None,
+        topic: str = "thinking_skills",
     ) -> str:
         """Build the prompt for question generation using NSW exam formats."""
         subtopic_name = concept_data.get('subtopic_name', 'Unknown')
-        subtopic_prompt = self._load_subtopic_prompt(subtopic_name)
+        subtopic_prompt = self._load_subtopic_prompt(subtopic_name, topic)
+
+        # Use topic-specific builder
+        if topic == "math":
+            return self._build_math_prompt(
+                concept_data=concept_data,
+                target_difficulty=target_difficulty,
+                target_bloom=target_bloom,
+                selected_misconceptions=selected_misconceptions,
+                selected_pattern=selected_pattern,
+                subtopic_prompt=subtopic_prompt,
+            )
 
         difficulty_desc = {
             1: "EASY - straightforward, 1-2 steps",
@@ -549,6 +586,142 @@ Output ONLY the JSON object."""
 
         return prompt
 
+    def _build_math_prompt(
+        self,
+        concept_data: dict,
+        target_difficulty: int,
+        target_bloom: str,
+        selected_misconceptions: list[str],
+        selected_pattern: str = None,
+        subtopic_prompt: str = None,
+    ) -> str:
+        """Build prompt for NSW Math exam question generation (5 choices, no images)."""
+        subtopic_name = concept_data.get('subtopic_name', 'Unknown')
+        concept_name = concept_data.get('name', 'Unknown')
+        concept_description = concept_data.get('description', '')
+
+        difficulty_desc = {
+            1: "EASY - straightforward, 1-2 steps",
+            2: "MEDIUM - requires careful thinking, 2-3 steps",
+            3: "HARD - multi-step, requires insight, only top students solve correctly",
+        }
+
+        misconceptions_text = "\n".join(f"- {m}" for m in selected_misconceptions) if selected_misconceptions else "None provided"
+
+        hard_requirements = """
+## CRITICAL: MAKE THIS QUESTION GENUINELY DIFFICULT
+
+This is for the NSW Selective Schools exam - a competitive test where only the TOP 5% of students
+are selected. Your question must be GENUINELY CHALLENGING, not a straightforward problem.
+
+### Difficulty Requirements (ALL must be met):
+1. **Multi-step reasoning**: Require 3-4 distinct calculation/reasoning steps
+2. **Problem interpretation**: The problem setup should require careful reading
+3. **Trap answers**: At least 2 wrong answers must result from common mistakes
+4. **Not textbook**: Cannot be solved by simple formula application
+5. **Real context**: Embed the math in a realistic scenario
+
+### What makes a question TOO EASY (AVOID these):
+- Direct formula application (e.g., "What is 3/4 of 24?")
+- Single-operation problems
+- Obvious correct answer
+- Distractors that are clearly wrong
+"""
+
+        prompt = f"""You are creating a NSW Selective Schools Mathematics exam question (Year 6 level).
+
+## Concept to Test
+- **Concept**: {concept_name}
+- **Description**: {concept_description}
+- **Subtopic**: {subtopic_name}
+
+## Target Parameters
+- **Difficulty**: {target_difficulty}/3 - {difficulty_desc.get(target_difficulty, 'HARD')}
+- **Cognitive Level**: {target_bloom}
+- **Question Type**: Multiple Choice (5 options A-E)
+- **Image**: NOT REQUIRED - text-only question
+"""
+
+        if target_difficulty >= 3:
+            prompt += hard_requirements
+
+        if subtopic_prompt:
+            prompt += f"""
+## Subtopic-Specific Guidelines
+{subtopic_prompt}
+"""
+
+        prompt += f"""
+## Common Misconceptions (use for wrong answers)
+{misconceptions_text}
+"""
+
+        if selected_pattern:
+            prompt += f"""
+## Question Pattern (use as inspiration, not exactly)
+{selected_pattern}
+"""
+
+        prompt += """
+## OUTPUT FORMAT (NSW Selective Exam - Mathematics)
+
+Return a JSON object with this EXACT structure:
+
+{
+    "setup_elements": ["what the problem sets up", "given information"],
+    "question_stem_structure": "Template/structure of the question",
+    "constraints": ["mathematical constraints"],
+    "correct_answer_reasoning": "Step-by-step solution approach",
+    "solution_steps": [
+        {"step_number": 1, "description": "First step", "reasoning": "Why this step"},
+        {"step_number": 2, "description": "Second step", "reasoning": "Why this step"}
+    ],
+    "requires_image": false,
+    "image_spec": null,
+    "content": "The problem context/scenario (or null if the question is self-contained)",
+    "question_text": "The actual mathematical question being asked?",
+    "choices": [
+        {"id": "1", "text": "Correct answer"},
+        {"id": "2", "text": "Wrong answer based on misconception 1", "misconception": "What error leads here"},
+        {"id": "3", "text": "Wrong answer based on misconception 2", "misconception": "What error leads here"},
+        {"id": "4", "text": "Wrong answer based on misconception 3", "misconception": "What error leads here"},
+        {"id": "5", "text": "Wrong answer based on calculation error", "misconception": "What error leads here"}
+    ],
+    "explanation": "Clear step-by-step explanation with <strong>HTML</strong> formatting",
+    "tags": ["Mathematics", "SUBTOPIC_NAME"]
+}
+
+## CRITICAL RULES
+1. Choice id="1" MUST be the correct answer
+2. Question must have EXACTLY 5 answer choices (not 4!)
+3. Question must have exactly ONE correct answer
+4. Language: clear, unambiguous, Year 6 appropriate vocabulary
+5. NEVER use literal \\n in content - use actual line breaks or <br> tags
+6. All explanations should use <strong>HTML</strong> for emphasis
+7. requires_image MUST be false (text-only math questions)
+
+## AUSTRALIAN CONTEXT (MANDATORY)
+- Use AUSTRALIAN ENGLISH spelling: colour, favourite, organisation, travelled, centre, metre, litre
+- All locations MUST be Australian: Sydney, Melbourne, Brisbane, Perth, Adelaide, Canberra
+- Use Australian suburbs: Parramatta, Bondi, St Kilda, Surry Hills, Manly, Fremantle
+- Australian schools: use names like "Northwood Primary", "Riverside Public School"
+- Australian currency: dollars and cents ($, AUD)
+- Australian seasons: Summer (Dec-Feb), Autumn (Mar-May), Winter (Jun-Aug), Spring (Sep-Nov)
+- Use "maths" not "math"
+- Use metric units: metres, centimetres, kilograms, litres
+- NO American references: no "favorite", "color", "math", no US cities, no Fahrenheit
+
+## DISTRACTOR DESIGN
+Each wrong answer should result from a specific, believable error:
+- Misconception-based: Applying a rule incorrectly (e.g., adding denominators when adding fractions)
+- Calculation error: Making a plausible arithmetic mistake
+- Reading error: Misinterpreting what the question asks
+- Step-skipping: Getting a partial answer by skipping a step
+
+Output ONLY the JSON object."""
+
+        return prompt
+
     def _build_revision_prompt(
         self,
         question: dict,
@@ -611,11 +784,18 @@ Output ONLY the JSON object."""
         data: dict,
         concept_data: dict,
         target_difficulty: int,
+        topic: str = "thinking_skills",
     ) -> QuestionBlueprint:
         """Parse generated data into a QuestionBlueprint."""
+        # Determine number of distractors based on topic
+        # Math has 5 choices (1 correct + 4 distractors)
+        # Thinking skills has 4 choices (1 correct + 3 distractors)
+        num_distractors = 4 if topic == "math" else 3
+        distractor_end = num_distractors + 1
+
         # Parse distractors from choices
         distractors = []
-        for c in data.get("choices", [])[1:4]:  # Skip first (correct) answer
+        for c in data.get("choices", [])[1:distractor_end]:  # Skip first (correct) answer
             distractors.append(DistractorSpec(
                 id=c.get("id", str(len(distractors) + 2)),
                 misconception=c.get("misconception", "Plausible but incorrect"),
@@ -623,8 +803,8 @@ Output ONLY the JSON object."""
                 text_hint=c.get("text"),
             ))
 
-        # Ensure we have 3 distractors
-        while len(distractors) < 3:
+        # Ensure we have the right number of distractors
+        while len(distractors) < num_distractors:
             distractors.append(DistractorSpec(
                 id=str(len(distractors) + 2),
                 misconception="Plausible but incorrect",
@@ -651,12 +831,16 @@ Output ONLY the JSON object."""
         subtopic_name = concept_data.get("subtopic_name", "Unknown")
         q_type = QuestionType.MCQ
 
+        # Get the correct topic UUID
+        topic_uuid_key = "mathematics" if topic == "math" else "thinking_skills"
+        topic_uuid_str = config.topic_uuids.get(topic_uuid_key, config.topic_uuids.get("thinking_skills"))
+
         return QuestionBlueprint(
             concept_id=concept_data.get("id", "unknown"),
             concept_name=concept_data.get("name", "Unknown"),
             subtopic_id=subtopic_id or UUID("00000000-0000-0000-0000-000000000000"),
             subtopic_name=subtopic_name,
-            topic_id=UUID(config.topic_uuids.get("thinking_skills")),
+            topic_id=UUID(topic_uuid_str),
             question_type=q_type,
             target_skill=TargetSkill.APPLICATION,
             difficulty_target=target_difficulty,
@@ -672,12 +856,15 @@ Output ONLY the JSON object."""
             tags=data.get("tags", ["Thinking Skills"]),
         )
 
-    def _parse_question(self, data: dict, blueprint: QuestionBlueprint) -> Question:
+    def _parse_question(self, data: dict, blueprint: QuestionBlueprint, topic: str = "thinking_skills") -> Question:
         """Parse generated data into a Question model.
 
         Note: Thinking Skills and Math are always multiple-choice.
+        Math has 5 choices, Thinking Skills has 4 choices.
         """
         choices = []
+        # Math has 5 choices, Thinking Skills has 4
+        num_choices = 5 if topic == "math" else 4
 
         # Standard MCQ: is_correct bool, first choice is correct
         for i, c in enumerate(data.get("choices", [])):
@@ -687,8 +874,8 @@ Output ONLY the JSON object."""
                 is_correct=(i == 0),  # First choice is correct
             ))
 
-        # Ensure at least 4 choices
-        while len(choices) < 4:
+        # Ensure we have the right number of choices
+        while len(choices) < num_choices:
             choices.append(Choice(
                 id=str(len(choices) + 1),
                 text=f"Option {len(choices) + 1}",

@@ -204,13 +204,22 @@ class OrchestratorAgent(BaseAgent):
             topic_id = config.topic_uuids.get(exam_type)
             # Convert exam_type to hyphenated format for database (e.g., "thinking_skills" -> "thinking-skills")
             exam_type_db = exam_type.replace("_", "-")
+
+            # Default time limits per exam type (NSW Selective format)
+            default_time_limits = {
+                "thinking_skills": 45,  # 45 minutes, 40 questions
+                "math": 40,             # 40 minutes, 35 questions
+                "reading": 40,          # 40 minutes, 30 questions
+            }
+            default_time = default_time_limits.get(exam_type, 45)
+
             exam_result = await self._create_exam(
                 exam_data={
                     "code": exam_code,
                     "name": exam_name,
                     "description": exam_config.get("exam_description", ""),
                     "type": exam_type_db,
-                    "time_limit": exam_config.get("time_limit", 45),
+                    "time_limit": exam_config.get("time_limit", default_time),
                     "question_count": len(question_ids),
                     "topic_id": topic_id,
                 },
@@ -332,19 +341,92 @@ class OrchestratorAgent(BaseAgent):
         }
 
     async def _generate_math(self, exam_config: dict) -> dict:
-        """Send task to Math Agent."""
-        endpoint = AGENT_ENDPOINTS["math"]
+        """Generate math questions using the multi-agent pipeline.
 
-        task_message = json.dumps({
-            "action": "generate_exam",
-            "config": exam_config,
-        })
+        NSW Selective Math exam: 35 questions, 40 minutes, 5 answer choices (A-E).
+        Distribution based on official NSW exam analysis.
+        """
+        # Get subtopic distribution from config
+        subtopic_questions = exam_config.get("subtopic_questions", {})
+        difficulty = exam_config.get("difficulty", 3)
 
-        return await self.a2a_client.send_task(
-            endpoint=endpoint,
-            skill_id="generate_exam",
-            message=task_message,
-        )
+        # Default distribution matching NSW Selective Math exam (35 questions)
+        # Based on analysis of official Practice Test 1
+        if not subtopic_questions:
+            subtopic_questions = {
+                "math:geometry": 9,            # Area, perimeter, angles, shapes
+                "math:number_operations": 6,   # Place value, BODMAS, rounding
+                "math:measurement": 6,         # Time, scales, capacity, units
+                "math:algebra_patterns": 6,    # Symbol equations, sequences
+                "math:fractions_decimals": 3,  # Fraction ops, comparing, converting
+                "math:probability": 2,         # Simple and combined probability
+                "math:data_statistics": 2,     # Mean, median, mode, tables
+                "math:number_theory": 1,       # Factors, primes, divisibility
+            }
+            # Total: 35 questions
+
+        all_questions = []
+        errors = []
+        questions_by_subtopic = {st: [] for st in subtopic_questions.keys()}
+
+        max_retry_rounds = 3  # Maximum retry rounds for missing questions
+
+        for retry_round in range(max_retry_rounds + 1):
+            # Calculate what we still need
+            tasks = []
+            subtopic_names = []
+            for subtopic, target_count in subtopic_questions.items():
+                if target_count <= 0:
+                    continue
+                current_count = len(questions_by_subtopic[subtopic])
+                needed = target_count - current_count
+                if needed > 0:
+                    if retry_round == 0:
+                        print(f"Queuing {needed} questions for {subtopic}...")
+                    else:
+                        print(f"[Retry {retry_round}] Regenerating {needed} missing questions for {subtopic}...")
+                    tasks.append(self.pipeline.generate_batch(
+                        subtopic=subtopic,
+                        count=needed,
+                        difficulty=difficulty,
+                    ))
+                    subtopic_names.append(subtopic)
+
+            if not tasks:
+                # All questions generated successfully
+                break
+
+            print(f"Generating {len(tasks)} subtopics in parallel...")
+            all_results = await asyncio.gather(*tasks, return_exceptions=True)
+
+            # Process results from all subtopics
+            for subtopic, results in zip(subtopic_names, all_results):
+                if isinstance(results, Exception):
+                    errors.append(f"Error generating {subtopic}: {str(results)}")
+                    continue
+
+                for result in results:
+                    if result.accepted and result.question:
+                        # Question is already a dict from pipeline
+                        q_dict = result.question if isinstance(result.question, dict) else result.question.model_dump(mode="json")
+                        questions_by_subtopic[subtopic].append(q_dict)
+                    else:
+                        errors.extend(result.errors)
+
+        # Flatten all questions
+        for subtopic, questions in questions_by_subtopic.items():
+            all_questions.extend(questions)
+            actual = len(questions)
+            target = subtopic_questions.get(subtopic, 0)
+            if actual < target:
+                print(f"Warning: {subtopic} has {actual}/{target} questions after {max_retry_rounds} retries")
+
+        return {
+            "success": True,
+            "questions": all_questions,
+            "total_questions": len(all_questions),
+            "errors": errors if errors else None,
+        }
 
     async def _generate_image(self, description: str) -> dict:
         """Send task to Image Agent."""

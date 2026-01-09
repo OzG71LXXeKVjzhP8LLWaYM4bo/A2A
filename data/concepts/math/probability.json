@@ -1,0 +1,95 @@
+{
+  "subtopic_id": "a1b2c3d4-6666-4000-8000-000000000006",
+  "subtopic_name": "Probability",
+  "display_name": "Probability",
+  "topic_id": "64cc2488-91f0-43e3-a560-b2bccf91442c",
+  "topic_name": "Mathematics",
+  "description": "Chance and probability, experimental vs theoretical probability, expressing probability as fractions, decimals and percentages.",
+  "typically_requires_image": false,
+  "concepts": [
+    {
+      "id": "simple-probability",
+      "name": "Simple Probability",
+      "description": "Calculating probability of single events, expressing as fractions",
+      "difficulty_min": 1,
+      "difficulty_max": 3,
+      "bloom_levels": ["application", "analysis"],
+      "common_misconceptions": [
+        "Confusing number of outcomes with probability",
+        "Not simplifying probability fractions",
+        "Forgetting probability must be between 0 and 1"
+      ],
+      "question_patterns": [
+        "A bag contains {X} red, {Y} blue, {Z} green marbles. What is the probability of drawing a {colour}?",
+        "A spinner has {N} equal sections. What is the probability of landing on {section}?"
+      ],
+      "example_stems": [
+        "A bag has 5 red, 3 blue, and 2 green marbles. What is the probability of picking a blue marble?",
+        "A fair dice is rolled. What is the probability of getting an even number?"
+      ]
+    },
+    {
+      "id": "combined-probability",
+      "name": "Combined Events",
+      "description": "Probability involving multiple conditions or combined outcomes",
+      "difficulty_min": 2,
+      "difficulty_max": 3,
+      "bloom_levels": ["analysis", "evaluation"],
+      "common_misconceptions": [
+        "Adding probabilities when should multiply",
+        "Not considering all possible outcomes",
+        "Confusing 'and' with 'or' conditions"
+      ],
+      "question_patterns": [
+        "What is the probability of drawing a card that is {condition1} AND {condition2}?",
+        "What is the probability of getting {outcome1} OR {outcome2}?"
+      ],
+      "example_stems": [
+        "From a standard deck, what is the probability of drawing a red King?",
+        "What is the probability of rolling a number less than 3 OR greater than 5?"
+      ]
+    },
+    {
+      "id": "probability-representations",
+      "name": "Probability Representations",
+      "description": "Converting between fractions, decimals, percentages for probability",
+      "difficulty_min": 2,
+      "difficulty_max": 3,
+      "bloom_levels": ["application"],
+      "common_misconceptions": [
+        "Errors converting fractions to percentages",
+        "Confusing 0.5 with 5%",
+        "Not recognizing equivalent probability expressions"
+      ],
+      "question_patterns": [
+        "Express the probability {fraction} as a percentage.",
+        "Which of these shows the same probability: {options}?"
+      ],
+      "example_stems": [
+        "The probability of rain is 3/5. What is this as a percentage?",
+        "Which is greater: 40% chance or probability of 3/8?"
+      ]
+    },
+    {
+      "id": "experimental-probability",
+      "name": "Experimental Probability",
+      "description": "Using experimental results to estimate probability",
+      "difficulty_min": 2,
+      "difficulty_max": 3,
+      "bloom_levels": ["analysis", "evaluation"],
+      "common_misconceptions": [
+        "Expecting experimental to exactly match theoretical",
+        "Not using correct total for denominator",
+        "Confusing frequency with probability"
+      ],
+      "question_patterns": [
+        "In {N} trials, {event} occurred {X} times. What is the experimental probability?",
+        "Based on the results, estimate the probability of {event}."
+      ],
+      "example_stems": [
+        "A coin was flipped 50 times and landed heads 28 times. What is the experimental probability of heads?",
+        "In 100 spins, the spinner landed on red 35 times. Estimate the probability of red."
+      ]
+    }
+  ]
+}

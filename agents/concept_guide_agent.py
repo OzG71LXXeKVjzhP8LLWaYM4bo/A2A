@@ -56,19 +56,30 @@ class ConceptGuideAgent(BaseAgent):
         if self._loaded:
             return
 
-        concepts_dir = config.data_dir / "concepts" / "thinking_skills"
+        # Load concepts from all topic directories
+        topic_dirs = {
+            "thinking_skills": config.data_dir / "concepts" / "thinking_skills",
+            "math": config.data_dir / "concepts" / "math",
+        }
 
-        if not concepts_dir.exists():
-            print(f"Warning: Concepts directory not found: {concepts_dir}")
-            self._loaded = True
-            return
+        for topic_name, concepts_dir in topic_dirs.items():
+            if not concepts_dir.exists():
+                print(f"Info: Concepts directory not found: {concepts_dir}")
+                continue
 
+            await self._load_concepts_from_dir(concepts_dir, topic_name)
+
+        self._loaded = True
+
+    async def _load_concepts_from_dir(self, concepts_dir: Path, topic_prefix: str):
+        """Load concept files from a directory with the given topic prefix."""
         for json_file in concepts_dir.glob("*.json"):
             try:
                 with open(json_file) as f:
                     data = json.load(f)
 
-                subtopic_key = json_file.stem  # e.g., "analogies"
+                subtopic_key = json_file.stem  # e.g., "geometry"
+                namespaced_key = f"{topic_prefix}:{subtopic_key}"  # e.g., "math:geometry"
 
                 # Parse concepts
                 concepts = []
@@ -101,13 +112,16 @@ class ConceptGuideAgent(BaseAgent):
                     concepts=concepts,
                 )
 
-                self._concept_graphs[subtopic_key] = graph
-                print(f"Loaded {len(concepts)} concepts for {subtopic_key}")
+                # Store with namespaced key (e.g., "math:geometry")
+                self._concept_graphs[namespaced_key] = graph
+                # Also store with simple key for backwards compatibility (e.g., "geometry")
+                # Only if there's no collision (first loaded wins)
+                if subtopic_key not in self._concept_graphs:
+                    self._concept_graphs[subtopic_key] = graph
+                print(f"Loaded {len(concepts)} concepts for {namespaced_key}")
 
             except Exception as e:
                 print(f"Error loading {json_file}: {e}")
-
-        self._loaded = True
 
     async def handle_task(self, task: Any, context: Any) -> dict:
         """Handle incoming task requests."""

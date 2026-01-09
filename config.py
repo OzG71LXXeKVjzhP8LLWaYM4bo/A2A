@@ -110,6 +110,50 @@ class Config(BaseModel):
         },
     }
 
+    # Mathematics subtopic UUIDs (NSW Selective exam - 35 questions, 40 minutes)
+    math_subtopics: dict = {
+        "geometry": {
+            "id": "a1b2c3d4-1111-4000-8000-000000000001",
+            "name": "Geometry",
+            "display_name": "Geometry",
+        },
+        "number_operations": {
+            "id": "a1b2c3d4-2222-4000-8000-000000000002",
+            "name": "Number Operations",
+            "display_name": "Number Operations",
+        },
+        "measurement": {
+            "id": "a1b2c3d4-3333-4000-8000-000000000003",
+            "name": "Measurement",
+            "display_name": "Measurement",
+        },
+        "algebra_patterns": {
+            "id": "a1b2c3d4-4444-4000-8000-000000000004",
+            "name": "Algebra & Patterns",
+            "display_name": "Algebra & Patterns",
+        },
+        "fractions_decimals": {
+            "id": "a1b2c3d4-5555-4000-8000-000000000005",
+            "name": "Fractions & Decimals",
+            "display_name": "Fractions & Decimals",
+        },
+        "probability": {
+            "id": "a1b2c3d4-6666-4000-8000-000000000006",
+            "name": "Probability",
+            "display_name": "Probability",
+        },
+        "data_statistics": {
+            "id": "a1b2c3d4-7777-4000-8000-000000000007",
+            "name": "Data & Statistics",
+            "display_name": "Data & Statistics",
+        },
+        "number_theory": {
+            "id": "a1b2c3d4-8888-4000-8000-000000000008",
+            "name": "Number Theory",
+            "display_name": "Number Theory",
+        },
+    }
+
     # Pipeline configuration
     max_pipeline_retries: int = 3
     min_quality_threshold: float = 0.7

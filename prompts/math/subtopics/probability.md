@@ -1,38 +1,39 @@
-## QUESTION TYPES for Probability (generate {{COUNT}} questions):
+## Probability Question Guidelines (NSW Selective Math)
 
-Create questions about chance, likelihood, and probability calculations.
+### Core Concepts
+1. **Simple Probability** - Single events, expressing as fractions
+2. **Combined Events** - AND/OR conditions, multiple outcomes
+3. **Probability Representations** - Converting between fractions, decimals, percentages
+4. **Experimental Probability** - Using trial results to estimate probability
 
-### Types to Include:
-1. **Simple Probability** - P(event) = favourable outcomes / total outcomes
-2. **Complement** - P(not A) = 1 - P(A)
-3. **Combined Events** - Two independent events (dice, coins, spinners)
-4. **Expected Value** - How many times would you expect...
-5. **Comparing Probabilities** - Which event is more likely?
-6. **Probability Words** - Certain, likely, unlikely, impossible
+### Question Patterns
+- "A bag has 5 red, 3 blue, and 2 green marbles. What is the probability of picking blue?"
+- "From a deck, what is the probability of drawing a red King?"
+- "The probability of rain is 3/5. What is this as a percentage?"
+- "A coin was flipped 50 times and landed heads 28 times. What is the experimental probability?"
 
-### Context Variety:
-- Dice and number cubes
-- Spinners with sections
-- Cards from a deck (simplified)
-- Marbles/balls in a bag
-- Coins (fair and biased)
+### Difficulty Techniques
+- Require counting total outcomes carefully
+- Include combined conditions (AND, OR)
+- Compare probabilities in different forms (fraction vs %)
+- Include items that are NOT replaced
+- Use multi-stage events (spinners, dice, cards)
 
-### Example Scenarios:
-- "A bag contains 4 red, 3 blue, and 5 green marbles. What is the probability of picking a blue marble?"
-- "A fair die is rolled twice. What is the probability of getting two 6s?"
-- "A spinner has 8 equal sections numbered 1-8. What is the probability of spinning an even number?"
-- "If the probability of rain is 3/5, what is the probability it won't rain?"
+### Distractor Design (Common Errors)
+- Confusing number of outcomes with probability
+- Adding probabilities when should multiply
+- Not simplifying probability fractions
+- Confusing experimental with theoretical
 
-### IMAGE REQUIREMENTS (when requires_image: true):
-For spinners or visual probability:
-- **SHAPE**: Circle divided into sections
-- **SECTIONS**: Number and size of sections (equal or unequal)
-- **LABELS**: Numbers, colours, or symbols in each section
-- **ARROW**: Spinner arrow position (if relevant)
+### Context Ideas
+- Games (spinners, dice, cards)
+- Lucky dips at school fetes
+- Weather predictions
+- Sports team selection
+- Raffle tickets
 
-### CRITICAL RULES:
-1. Express probabilities as simplified fractions
-2. Use small, manageable total outcomes (12, 20, 36 max)
-3. For combined events, use independent events only
-4. Avoid complex conditional probability
-5. All probabilities must be between 0 and 1
+### CRITICAL RULES
+- Probabilities must be between 0 and 1
+- Express as simplified fractions (or ask for decimal/%)
+- Clearly define the sample space
+- Australian context for names and scenarios

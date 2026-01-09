@@ -1,0 +1,99 @@
+{
+  "subtopic_id": "a1b2c3d4-8888-4000-8000-000000000008",
+  "subtopic_name": "Number Theory",
+  "display_name": "Number Theory",
+  "topic_id": "64cc2488-91f0-43e3-a560-b2bccf91442c",
+  "topic_name": "Mathematics",
+  "description": "Factors, multiples, prime numbers, divisibility rules, LCM and HCF.",
+  "typically_requires_image": false,
+  "concepts": [
+    {
+      "id": "factors-multiples",
+      "name": "Factors and Multiples",
+      "description": "Finding factors and multiples of numbers, common factors and multiples",
+      "difficulty_min": 1,
+      "difficulty_max": 3,
+      "bloom_levels": ["application", "analysis"],
+      "common_misconceptions": [
+        "Confusing factors with multiples",
+        "Forgetting 1 and the number itself as factors",
+        "Missing factor pairs"
+      ],
+      "question_patterns": [
+        "List all factors of {N}.",
+        "What is the smallest number that is a multiple of both {A} and {B}?",
+        "What is the highest common factor of {A} and {B}?"
+      ],
+      "example_stems": [
+        "What are all the factors of 36?",
+        "Find the LCM of 12 and 18."
+      ]
+    },
+    {
+      "id": "prime-composite",
+      "name": "Prime and Composite Numbers",
+      "description": "Identifying prime numbers, prime factorization",
+      "difficulty_min": 2,
+      "difficulty_max": 3,
+      "bloom_levels": ["comprehension", "application"],
+      "common_misconceptions": [
+        "Thinking 1 is prime (it's not)",
+        "Forgetting 2 is the only even prime",
+        "Errors in prime factorization"
+      ],
+      "question_patterns": [
+        "Which of these numbers is prime: {list}?",
+        "Express {N} as a product of prime factors.",
+        "How many prime numbers are between {A} and {B}?"
+      ],
+      "example_stems": [
+        "Is 57 a prime number? Explain.",
+        "Write 84 as a product of its prime factors."
+      ]
+    },
+    {
+      "id": "divisibility-rules",
+      "name": "Divisibility Rules",
+      "description": "Using divisibility rules for 2, 3, 4, 5, 6, 8, 9, 10",
+      "difficulty_min": 2,
+      "difficulty_max": 3,
+      "bloom_levels": ["application", "analysis"],
+      "common_misconceptions": [
+        "Confusing divisibility rules for different numbers",
+        "Not checking all conditions for composite divisors",
+        "Forgetting divisibility by 3 uses digit sum"
+      ],
+      "question_patterns": [
+        "Is {N} divisible by {D}?",
+        "What digit makes {N_}_ divisible by {D}?",
+        "Which numbers in the list are divisible by both {A} and {B}?"
+      ],
+      "example_stems": [
+        "Is 2,847 divisible by 3?",
+        "What digit in the ones place makes 47_ divisible by 6?"
+      ]
+    },
+    {
+      "id": "number-properties",
+      "name": "Number Properties and Patterns",
+      "description": "Square numbers, triangular numbers, odd/even properties",
+      "difficulty_min": 2,
+      "difficulty_max": 3,
+      "bloom_levels": ["analysis", "evaluation"],
+      "common_misconceptions": [
+        "Not recognizing square number patterns",
+        "Errors with odd/even arithmetic rules",
+        "Confusing triangular and square numbers"
+      ],
+      "question_patterns": [
+        "What is the next square number after {N}?",
+        "The sum of two consecutive triangular numbers is always a {type}. What type?",
+        "Is the product of {description} odd or even?"
+      ],
+      "example_stems": [
+        "What is the 8th triangular number?",
+        "The product of three consecutive integers is always divisible by what number?"
+      ]
+    }
+  ]
+}

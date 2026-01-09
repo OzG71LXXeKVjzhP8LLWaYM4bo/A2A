@@ -1,0 +1,137 @@
+{
+  "subtopic_id": "a1b2c3d4-2222-4000-8000-000000000002",
+  "subtopic_name": "Number Operations",
+  "display_name": "Number Operations",
+  "topic_id": "64cc2488-91f0-43e3-a560-b2bccf91442c",
+  "topic_name": "Mathematics",
+  "description": "Arithmetic operations, order of operations, place value, rounding, and working backwards through calculations.",
+  "typically_requires_image": false,
+  "concepts": [
+    {
+      "id": "place-value",
+      "name": "Place Value",
+      "description": "Understanding digit values in large numbers, comparing place values",
+      "difficulty_min": 1,
+      "difficulty_max": 3,
+      "bloom_levels": ["comprehension", "application"],
+      "common_misconceptions": [
+        "Confusing place names (thousands vs ten-thousands)",
+        "Errors with zeros as placeholders",
+        "Not understanding relative value of digits"
+      ],
+      "question_patterns": [
+        "In the number {N}, how many times larger is digit {X} than digit {Y}?",
+        "What is the value of the digit {X} in {N}?"
+      ],
+      "example_stems": [
+        "In 30,060, how many times larger is the value of 3 than 6?",
+        "What is the value of the 7 in 47,382?"
+      ]
+    },
+    {
+      "id": "order-of-operations",
+      "name": "Order of Operations",
+      "description": "Applying BODMAS/BIDMAS rules to multi-operation expressions",
+      "difficulty_min": 2,
+      "difficulty_max": 3,
+      "bloom_levels": ["application", "analysis"],
+      "common_misconceptions": [
+        "Calculating left to right ignoring order",
+        "Forgetting brackets are done first",
+        "Adding before multiplying"
+      ],
+      "question_patterns": [
+        "Which number sentence shows this information?",
+        "What is the value of {expression}?"
+      ],
+      "example_stems": [
+        "When 117 chocolates are shared between 14 people, each gets 8 with 5 left over. Which equation shows this?",
+        "Calculate: 5 + 3 x 4 - 2"
+      ]
+    },
+    {
+      "id": "rounding",
+      "name": "Rounding Numbers",
+      "description": "Rounding to nearest 10, 100, 1000, or specified place value",
+      "difficulty_min": 1,
+      "difficulty_max": 3,
+      "bloom_levels": ["application"],
+      "common_misconceptions": [
+        "Rounding down when digit is 5 (should round up)",
+        "Rounding to wrong place value",
+        "Confusion with multiple rounding to different places"
+      ],
+      "question_patterns": [
+        "Round {N} to the nearest {place}.",
+        "What is the difference when {N} is rounded two different ways?"
+      ],
+      "example_stems": [
+        "Alinta rounds 4,850,000 to nearest million. Tau rounds to nearest hundred thousand. What is the difference?",
+        "Round 3,476 to the nearest hundred."
+      ]
+    },
+    {
+      "id": "working-backwards",
+      "name": "Working Backwards",
+      "description": "Finding starting values by reversing operations in word problems",
+      "difficulty_min": 2,
+      "difficulty_max": 3,
+      "bloom_levels": ["analysis", "evaluation"],
+      "common_misconceptions": [
+        "Not reversing operations correctly",
+        "Applying operations in wrong order when reversing",
+        "Forgetting to track all steps"
+      ],
+      "question_patterns": [
+        "Alan started with {X}. After these actions, he had {Y}. What was the original?",
+        "Working backwards from the result, find the starting value."
+      ],
+      "example_stems": [
+        "Alan had $10. He gave some to Kiana, half of remainder to Jason. Jason gave half to Lenny who got $1.60. How much did Alan give Kiana?",
+        "After doubling and adding 5, the result is 23. What was the starting number?"
+      ]
+    },
+    {
+      "id": "multiplication-division",
+      "name": "Multiplication and Division",
+      "description": "Multi-digit multiplication and division, including with large numbers",
+      "difficulty_min": 1,
+      "difficulty_max": 3,
+      "bloom_levels": ["application"],
+      "common_misconceptions": [
+        "Place value errors in multiplication",
+        "Forgetting zeros when multiplying by 10, 100, etc.",
+        "Division remainder errors"
+      ],
+      "question_patterns": [
+        "Multiply the smallest {X}-digit number by the largest {Y}-digit number.",
+        "What is {A} divided by {B}?"
+      ],
+      "example_stems": [
+        "Nicola multiplies the smallest 4-digit number by the largest 2-digit number. What is the answer?",
+        "What is 1000 x 99?"
+      ]
+    },
+    {
+      "id": "magic-squares",
+      "name": "Magic Squares and Number Puzzles",
+      "description": "Completing magic squares where rows, columns, and diagonals sum to same total",
+      "difficulty_min": 2,
+      "difficulty_max": 3,
+      "bloom_levels": ["analysis", "evaluation"],
+      "common_misconceptions": [
+        "Forgetting diagonals must also sum correctly",
+        "Not checking all constraints",
+        "Arithmetic errors in finding missing values"
+      ],
+      "question_patterns": [
+        "In this magic square, what is the missing number?",
+        "Complete the magic square where each row/column/diagonal sums to {N}."
+      ],
+      "example_stems": [
+        "In a magic square with top row 20, 15, 16 and 18 in bottom left, find the missing bottom right number.",
+        "What number completes this magic square?"
+      ]
+    }
+  ]
+}

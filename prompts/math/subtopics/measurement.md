@@ -1,37 +1,34 @@
-## QUESTION TYPES for Measurement (generate {{COUNT}} questions):
+## Measurement Question Guidelines (NSW Selective Math)
 
-Create questions about length, mass, volume, time, and unit conversions.
+### Core Concepts
+1. **Time Calculations** - 12/24-hour conversion, elapsed time, crossing noon/midnight
+2. **Time Zones** - Australian time zones, international flights
+3. **Reading Scales** - Scales that don't start at zero, unmarked intervals
+4. **Capacity/Volume** - mL and L, mixing liquids, container problems
+5. **Unit Conversion** - mm/cm/m/km, g/kg, mL/L
+6. **Ratios in Measurement** - Mixing, scaling, comparing quantities
 
-### Types to Include:
-1. **Length Conversions** - Converting between mm, cm, m, km
-2. **Mass Conversions** - Converting between g and kg
-3. **Volume/Capacity** - Converting between mL and L
-4. **Time Calculations** - Duration, elapsed time, time zones
-5. **Reading Scales** - Interpreting measurement instruments
-6. **Compound Measures** - Speed (km/h), density
+### Question Patterns
+- "A watch reads 1850. What time is it one quarter of an hour later in 12-hour format?"
+- "Kylie leaves Las Vegas at 1300 on a 6-hour flight. Sydney is 17 hours ahead. What time does she arrive?"
+- "The scale shows 850g with the jar. Empty jar is 330g. She needs 650g sauce. How much more?"
+- "Mix 2 parts cordial to 5 parts water. For 350mL total, how much cordial?"
 
-### Context Variety:
-- Travel and distance
-- Cooking and recipes
-- Shopping and packaging
-- Sports and athletics
+### Difficulty Techniques
+- Cross midnight/noon in time calculations
+- Include time zone changes with date changes
+- Use scales with offset errors or non-zero starting points
+- Combine units in one problem (require conversion)
+- Include container weight vs contents
+
+### Context Ideas
+- Flight schedules (Australian airlines, airports)
+- Cooking and recipes (Australian units)
 - Science experiments
+- Shopping (Australian products, $)
+- Sports timing
 
-### Example Scenarios:
-- "A recipe needs 2.5 kg of flour. Chloe has 1800 g. How much more flour does she need?"
-- "A film starts at 2:45 PM and lasts 1 hour 52 minutes. What time does it end?"
-- "Convert 3.75 km to metres"
-- "A tap fills a bucket at 250 mL per second. How many litres in 2 minutes?"
-
-### IMAGE REQUIREMENTS (when requires_image: true):
-For scale/instrument reading questions:
-- **INSTRUMENT**: Type of measuring device (ruler, scale, measuring jug)
-- **SCALE**: The range and divisions shown
-- **POINTER/LEVEL**: Where the measurement indicator points
-- **LABELS**: Any relevant unit markings
-
-### CRITICAL RULES:
-1. Use metric units only (no imperial)
-2. Ensure conversions work out to clean numbers
-3. Time should use 12-hour (AM/PM) or 24-hour format consistently
-4. For elapsed time, don't cross midnight unless specifically relevant
+### CRITICAL RULES
+- Use metric units only (no imperial)
+- Australian time zones: AEST, AWST, ACST
+- Realistic contexts (Australian locations, products)

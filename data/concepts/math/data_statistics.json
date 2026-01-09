@@ -1,0 +1,97 @@
+{
+  "subtopic_id": "a1b2c3d4-7777-4000-8000-000000000007",
+  "subtopic_name": "Data & Statistics",
+  "display_name": "Data & Statistics",
+  "topic_id": "64cc2488-91f0-43e3-a560-b2bccf91442c",
+  "topic_name": "Mathematics",
+  "description": "Reading and interpreting graphs, calculating mean, median, mode, range, and data analysis.",
+  "typically_requires_image": false,
+  "concepts": [
+    {
+      "id": "mean-average",
+      "name": "Mean (Average)",
+      "description": "Calculating the arithmetic mean of a data set",
+      "difficulty_min": 1,
+      "difficulty_max": 3,
+      "bloom_levels": ["application", "analysis"],
+      "common_misconceptions": [
+        "Adding without dividing by count",
+        "Including wrong number of values in count",
+        "Confusing mean with median"
+      ],
+      "question_patterns": [
+        "The scores are {list}. What is the mean?",
+        "The average of {N} numbers is {X}. One number is removed. What is the new average?"
+      ],
+      "example_stems": [
+        "Test scores are 85, 92, 78, 88, 92. What is the mean score?",
+        "The average of 5 numbers is 24. If 30 is added, what is the new average?"
+      ]
+    },
+    {
+      "id": "median-mode-range",
+      "name": "Median, Mode and Range",
+      "description": "Finding median (middle value), mode (most frequent), and range (spread)",
+      "difficulty_min": 2,
+      "difficulty_max": 3,
+      "bloom_levels": ["application", "analysis"],
+      "common_misconceptions": [
+        "Not ordering data before finding median",
+        "Forgetting to average two middle values for even count",
+        "Confusing mode with median",
+        "Subtracting wrong values for range"
+      ],
+      "question_patterns": [
+        "Find the median of {list}.",
+        "What is the mode of these values: {list}?",
+        "What is the range of the data set?"
+      ],
+      "example_stems": [
+        "Heights are 142, 138, 145, 138, 140. What is the median?",
+        "Scores: 7, 8, 7, 9, 8, 7, 10. What is the mode?"
+      ]
+    },
+    {
+      "id": "interpreting-tables",
+      "name": "Interpreting Tables",
+      "description": "Reading and extracting information from data tables",
+      "difficulty_min": 2,
+      "difficulty_max": 3,
+      "bloom_levels": ["comprehension", "analysis"],
+      "common_misconceptions": [
+        "Reading wrong row or column",
+        "Not accounting for table totals",
+        "Misinterpreting two-way tables"
+      ],
+      "question_patterns": [
+        "According to the table, how many {category} {action}?",
+        "What percentage of {group} chose {option}?"
+      ],
+      "example_stems": [
+        "The table shows fruit preferences. How many students chose apples?",
+        "From the two-way table, how many boys play soccer?"
+      ]
+    },
+    {
+      "id": "working-backwards-statistics",
+      "name": "Working Backwards with Statistics",
+      "description": "Finding missing values given statistical measures",
+      "difficulty_min": 2,
+      "difficulty_max": 3,
+      "bloom_levels": ["analysis", "evaluation"],
+      "common_misconceptions": [
+        "Not setting up equation correctly",
+        "Forgetting to account for all values",
+        "Arithmetic errors in reverse calculations"
+      ],
+      "question_patterns": [
+        "The mean of {N} numbers is {X}. If one number is {Y}, what is the sum of the others?",
+        "Adding what value would change the mean from {A} to {B}?"
+      ],
+      "example_stems": [
+        "The mean of 4 numbers is 15. Three of them are 12, 18, and 14. What is the fourth?",
+        "Five test scores average 80. What score is needed on the sixth test to raise the average to 82?"
+      ]
+    }
+  ]
+}

@@ -282,13 +282,30 @@ class ThinkingSkillsConfig(ExamConfig):
 
 
 class MathConfig(ExamConfig):
-    averages_count: int = 3
-    fractions_count: int = 4
-    geometry_count: int = 5
-    measurement_count: int = 4
-    number_patterns_count: int = 3
-    percentages_count: int = 4
-    probability_count: int = 3
-    problem_solving_count: int = 5
-    ratios_count: int = 4
-    statistics_count: int = 4
+    """NSW Selective Math exam distribution (35 questions, 40 minutes).
+
+    Based on official NSW Selective exam format:
+    - Geometry: 9 (area, perimeter, angles - largest category)
+    - Number Operations: 6 (arithmetic, order of operations, place value)
+    - Measurement: 6 (time, mass, capacity, length, conversions)
+    - Algebra & Patterns: 6 (sequences, symbol equations, patterns)
+    - Fractions & Decimals: 3 (operations, comparisons, visual fractions)
+    - Probability: 2 (likelihood, outcomes, spinners)
+    - Data & Statistics: 2 (graphs, tables, mean/median/mode)
+    - Number Theory: 1 (factors, multiples, primes)
+
+    Total: 35 questions
+    Time: 40 minutes
+    Format: 5 multiple choice options (A-E)
+    """
+    time_limit: int = 40  # Override default 45 minutes
+
+    # Used subtopics (35 total matching NSW distribution)
+    geometry_count: int = 9
+    number_operations_count: int = 6
+    measurement_count: int = 6
+    algebra_patterns_count: int = 6
+    fractions_decimals_count: int = 3
+    probability_count: int = 2
+    data_statistics_count: int = 2
+    number_theory_count: int = 1

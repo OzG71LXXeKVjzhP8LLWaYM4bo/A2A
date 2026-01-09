@@ -1,0 +1,95 @@
+{
+  "subtopic_id": "a1b2c3d4-5555-4000-8000-000000000005",
+  "subtopic_name": "Fractions & Decimals",
+  "display_name": "Fractions & Decimals",
+  "topic_id": "64cc2488-91f0-43e3-a560-b2bccf91442c",
+  "topic_name": "Mathematics",
+  "description": "Fraction operations, comparing fractions, fractions of amounts, converting between fractions and decimals.",
+  "typically_requires_image": false,
+  "concepts": [
+    {
+      "id": "fraction-of-whole",
+      "name": "Fractions of a Whole",
+      "description": "Finding fractions of amounts, visual fraction problems",
+      "difficulty_min": 1,
+      "difficulty_max": 3,
+      "bloom_levels": ["application", "analysis"],
+      "common_misconceptions": [
+        "Dividing by numerator instead of denominator",
+        "Not multiplying after dividing",
+        "Confusing part and whole"
+      ],
+      "question_patterns": [
+        "A wall is divided into {N} sections. {X}/{N} are painted purple, {Y}/{N} yellow. How many green?",
+        "What is {fraction} of {total}?"
+      ],
+      "example_stems": [
+        "Jack paints 3/10 purple and 2/5 yellow. How many of 10 sections are green?",
+        "What is 3/4 of 48?"
+      ]
+    },
+    {
+      "id": "comparing-fractions",
+      "name": "Comparing Fractions",
+      "description": "Comparing fractions to each other and to benchmarks like 1/2, 1/4, 3/4",
+      "difficulty_min": 2,
+      "difficulty_max": 3,
+      "bloom_levels": ["analysis"],
+      "common_misconceptions": [
+        "Thinking larger denominator means larger fraction",
+        "Not converting to common denominator",
+        "Benchmark comparison errors"
+      ],
+      "question_patterns": [
+        "Andy ate {X}, Bella ate {Y}, Carlo ate the rest. Which statements are true?",
+        "Which fraction is larger: {A} or {B}?"
+      ],
+      "example_stems": [
+        "Andy ate 1/5, Bella 2/5, Carlo the rest. Is 'Carlo ate less than half' true?",
+        "Which is greater: 5/8 or 2/3?"
+      ]
+    },
+    {
+      "id": "fraction-operations",
+      "name": "Fraction Operations",
+      "description": "Adding, subtracting, and comparing fractions in word problems",
+      "difficulty_min": 2,
+      "difficulty_max": 3,
+      "bloom_levels": ["application", "analysis"],
+      "common_misconceptions": [
+        "Adding numerators and denominators separately",
+        "Not finding common denominator first",
+        "Errors converting mixed numbers"
+      ],
+      "question_patterns": [
+        "Quoc bought {N} pizzas. Amina ate {X}, Fred ate {Y}, Sally ate {Z}. How much more did Quoc eat than Amina?",
+        "Add: {fraction1} + {fraction2}"
+      ],
+      "example_stems": [
+        "From 4 pizzas: Amina ate 4/5, Fred ate 1 and 1/5, Sally ate 3/5. How much more did Quoc eat than Amina?",
+        "Calculate: 2/3 + 1/4 - 1/6"
+      ]
+    },
+    {
+      "id": "fractions-decimals-conversion",
+      "name": "Converting Fractions and Decimals",
+      "description": "Converting between fractions, decimals, and percentages",
+      "difficulty_min": 2,
+      "difficulty_max": 3,
+      "bloom_levels": ["application"],
+      "common_misconceptions": [
+        "Decimal place errors in conversion",
+        "Not simplifying fractions",
+        "Percentage conversion errors"
+      ],
+      "question_patterns": [
+        "Express {fraction} as a decimal.",
+        "Convert {decimal} to a fraction in simplest form."
+      ],
+      "example_stems": [
+        "What is 3/8 as a decimal?",
+        "Convert 0.35 to a fraction."
+      ]
+    }
+  ]
+}

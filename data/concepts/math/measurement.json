@@ -1,0 +1,137 @@
+{
+  "subtopic_id": "a1b2c3d4-3333-4000-8000-000000000003",
+  "subtopic_name": "Measurement",
+  "display_name": "Measurement",
+  "topic_id": "64cc2488-91f0-43e3-a560-b2bccf91442c",
+  "topic_name": "Mathematics",
+  "description": "Time calculations, reading scales, mass, capacity, length, unit conversions, and time zones.",
+  "typically_requires_image": false,
+  "concepts": [
+    {
+      "id": "time-calculation",
+      "name": "Time Calculations",
+      "description": "Converting between 12-hour and 24-hour time, calculating elapsed time, time addition/subtraction",
+      "difficulty_min": 1,
+      "difficulty_max": 3,
+      "bloom_levels": ["application", "analysis"],
+      "common_misconceptions": [
+        "Confusing AM/PM in 24-hour conversion",
+        "Errors crossing noon or midnight",
+        "Forgetting to convert between hours and minutes"
+      ],
+      "question_patterns": [
+        "A watch reads {time24}. What is this in 12-hour format?",
+        "What time is {X} hours and {Y} minutes after {time}?"
+      ],
+      "example_stems": [
+        "Sandy's watch reads 1850. What is the time one quarter of an hour later in 12-hour format?",
+        "A train departs at 0945 and arrives at 1315. How long is the journey?"
+      ]
+    },
+    {
+      "id": "time-zones",
+      "name": "Time Zones",
+      "description": "Calculating times across different time zones, flight arrival times",
+      "difficulty_min": 3,
+      "difficulty_max": 3,
+      "bloom_levels": ["analysis", "evaluation"],
+      "common_misconceptions": [
+        "Adding instead of subtracting time difference or vice versa",
+        "Not accounting for date changes",
+        "Confusing ahead/behind in time zones"
+      ],
+      "question_patterns": [
+        "{Person} leaves {City1} at {time}. After {X} hours flight, arrives in {City2} which is {Y} hours ahead/behind. What local time?",
+        "If it is {time} in Sydney, what time is it in London?"
+      ],
+      "example_stems": [
+        "Kylie leaves Las Vegas Friday at 1300 on a 6-hour flight. After 24 hours and a 20-hour flight to Sydney (17 hours ahead), what time does she arrive?",
+        "A call at 3pm Sydney time - what time in New York (16 hours behind)?"
+      ]
+    },
+    {
+      "id": "reading-scales",
+      "name": "Reading Scales",
+      "description": "Reading values from scales, dials, thermometers including between marked values",
+      "difficulty_min": 2,
+      "difficulty_max": 3,
+      "bloom_levels": ["application", "analysis"],
+      "common_misconceptions": [
+        "Misreading scale divisions",
+        "Not accounting for scale offset or error",
+        "Confusing unmarked intervals"
+      ],
+      "question_patterns": [
+        "The scale shows {X}. The container weighs {Y} empty. How much {substance} is there?",
+        "A faulty scale starts at {offset}. With items showing {reading}, what is actual weight?"
+      ],
+      "example_stems": [
+        "Rana needs 650g sauce. Scale shows 850g with jar. Empty jar is 330g. How much more needed?",
+        "A scale doesn't start at 0. Two blocks read 38kg. What is one block's weight?"
+      ]
+    },
+    {
+      "id": "capacity-volume",
+      "name": "Capacity and Volume",
+      "description": "Measuring liquids, converting between mL and L, mixing liquids problems",
+      "difficulty_min": 2,
+      "difficulty_max": 3,
+      "bloom_levels": ["application", "analysis"],
+      "common_misconceptions": [
+        "Forgetting 1000mL = 1L",
+        "Not tracking what was added vs removed",
+        "Confusing container capacity with contents"
+      ],
+      "question_patterns": [
+        "{Person} has {X}mL of {liquid}. After drinking {Y}mL and adding water to {Z}mL, how much water is left?",
+        "Mix {X} parts juice to {Y} parts water. Total {Z}mL. How much juice?"
+      ],
+      "example_stems": [
+        "Sooyoung has 250mL cordial and 1L water. Drinks 10mL cordial, tops up to 500mL. How much water left?",
+        "Jan puts 150mL orange juice and adds 6 times as much apple juice. Total volume?"
+      ]
+    },
+    {
+      "id": "unit-conversion",
+      "name": "Unit Conversions",
+      "description": "Converting between metric units for length, mass, capacity",
+      "difficulty_min": 2,
+      "difficulty_max": 3,
+      "bloom_levels": ["application"],
+      "common_misconceptions": [
+        "Multiplying when should divide or vice versa",
+        "Using wrong conversion factor",
+        "Forgetting to convert all values to same unit"
+      ],
+      "question_patterns": [
+        "Convert {X} cm to metres.",
+        "The graph shows rainfall in mm. How many cm is that?"
+      ],
+      "example_stems": [
+        "A fence is 2.5 km long. How many metres is this?",
+        "February rainfall was 450mm. How many cm is this?"
+      ]
+    },
+    {
+      "id": "ratio-mixing",
+      "name": "Ratios in Measurement",
+      "description": "Using ratios for mixing, scaling recipes, comparing quantities",
+      "difficulty_min": 2,
+      "difficulty_max": 3,
+      "bloom_levels": ["application", "analysis"],
+      "common_misconceptions": [
+        "Confusing ratio parts with actual amounts",
+        "Not calculating total parts correctly",
+        "Errors when scaling up or down"
+      ],
+      "question_patterns": [
+        "Mix {X} parts {A} to {Y} parts {B}. For {Z} total, how much {A}?",
+        "A recipe uses {ratio}. For {total} servings, how much of {ingredient}?"
+      ],
+      "example_stems": [
+        "Jan puts 150mL orange juice and 6 times as much apple juice. How much total?",
+        "A recipe needs 2 parts flour to 3 parts sugar. For 500g mixture, how much flour?"
+      ]
+    }
+  ]
+}

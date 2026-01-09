@@ -1,0 +1,165 @@
+{
+  "subtopic_id": "a1b2c3d4-1111-4000-8000-000000000001",
+  "subtopic_name": "Geometry",
+  "display_name": "Geometry",
+  "topic_id": "64cc2488-91f0-43e3-a560-b2bccf91442c",
+  "topic_name": "Mathematics",
+  "description": "Area, perimeter, angles, and properties of 2D and 3D shapes. Focus on rectangles, squares, triangles, and composite shapes.",
+  "typically_requires_image": false,
+  "concepts": [
+    {
+      "id": "area-rectangle",
+      "name": "Rectangle and Square Area",
+      "description": "Finding area of rectangles and squares using length x width",
+      "difficulty_min": 1,
+      "difficulty_max": 3,
+      "bloom_levels": ["application", "analysis"],
+      "common_misconceptions": [
+        "Confusing area with perimeter (adding instead of multiplying)",
+        "Using wrong units (cm vs cm squared)",
+        "Forgetting to include all parts in multi-step problems"
+      ],
+      "question_patterns": [
+        "A rectangle has length {X} and width {Y}. Find the area.",
+        "Calculate the area of the rectangular garden/room/field."
+      ],
+      "example_stems": [
+        "A garden measures 12 m by 8 m. What is its area?",
+        "Find the area of a rectangle with length 15 cm and width 9 cm."
+      ]
+    },
+    {
+      "id": "perimeter-rectangle",
+      "name": "Rectangle and Square Perimeter",
+      "description": "Finding perimeter by adding all sides or using 2(l+w) formula",
+      "difficulty_min": 1,
+      "difficulty_max": 3,
+      "bloom_levels": ["application", "analysis"],
+      "common_misconceptions": [
+        "Confusing perimeter with area",
+        "Only adding two sides instead of all four",
+        "Forgetting to double in 2(l+w) formula"
+      ],
+      "question_patterns": [
+        "Find the perimeter of a rectangle with dimensions {X} by {Y}.",
+        "How much fencing is needed for a rectangular garden?"
+      ],
+      "example_stems": [
+        "A field is 25 m long and 18 m wide. How much fencing is needed?",
+        "Calculate the perimeter of a rectangle with length 14 cm and width 9 cm."
+      ]
+    },
+    {
+      "id": "composite-shapes",
+      "name": "Composite Shape Calculations",
+      "description": "Finding area or perimeter of L-shapes, T-shapes, or combined rectangles",
+      "difficulty_min": 2,
+      "difficulty_max": 3,
+      "bloom_levels": ["analysis", "evaluation"],
+      "common_misconceptions": [
+        "Not breaking shape into simpler parts",
+        "Double counting overlapping regions",
+        "Missing hidden dimensions",
+        "Adding areas when finding perimeter"
+      ],
+      "question_patterns": [
+        "Find the area of the L-shaped figure.",
+        "Calculate the perimeter of the composite shape.",
+        "Two rectangles are joined. Find the total area."
+      ],
+      "example_stems": [
+        "An L-shaped room: top section 8m x 4m, extension 4m x 3m. Find total area.",
+        "Find the perimeter of a shape made from two joined rectangles."
+      ]
+    },
+    {
+      "id": "angles-basic",
+      "name": "Angle Properties",
+      "description": "Finding unknown angles using straight line (180), right angle (90), and triangle (180) properties",
+      "difficulty_min": 2,
+      "difficulty_max": 3,
+      "bloom_levels": ["application", "analysis"],
+      "common_misconceptions": [
+        "Forgetting angles on straight line sum to 180",
+        "Confusing complementary (90) and supplementary (180)",
+        "Not recognizing right angle markers",
+        "Arithmetic errors when subtracting from 180"
+      ],
+      "question_patterns": [
+        "Two angles on a straight line are {X} and {Y}. Find the third angle.",
+        "In rectangle ABCD, angle ABE = {X}. Find angle EBC."
+      ],
+      "example_stems": [
+        "On a straight line, angles measure 65 and 48 degrees. What is the third angle?",
+        "A triangle has angles of 35 and 90 degrees. Find the third angle."
+      ]
+    },
+    {
+      "id": "3d-properties",
+      "name": "3D Shape Properties",
+      "description": "Counting faces, edges, and vertices of 3D shapes; understanding nets",
+      "difficulty_min": 2,
+      "difficulty_max": 3,
+      "bloom_levels": ["comprehension", "application"],
+      "common_misconceptions": [
+        "Confusing faces, edges, and vertices",
+        "Forgetting hidden faces/edges",
+        "Not counting base of pyramids correctly",
+        "Incorrect net identification"
+      ],
+      "question_patterns": [
+        "How many faces/edges/vertices does a {shape} have?",
+        "What is the sum of faces, edges, and vertices of a pyramid?",
+        "Which net folds into a cube?"
+      ],
+      "example_stems": [
+        "A hexagonal pyramid has how many faces?",
+        "Which of these nets will fold into a cube?"
+      ]
+    },
+    {
+      "id": "symmetry",
+      "name": "Symmetry and Transformations",
+      "description": "Lines of symmetry, rotational symmetry, rotation angles",
+      "difficulty_min": 2,
+      "difficulty_max": 3,
+      "bloom_levels": ["application", "analysis"],
+      "common_misconceptions": [
+        "Confusing line and rotational symmetry",
+        "Missing diagonal lines of symmetry",
+        "Incorrect rotation angle calculation",
+        "Not considering all orientations"
+      ],
+      "question_patterns": [
+        "How many lines of symmetry does the shape have?",
+        "Through what angle is the shape rotated?",
+        "Which tiles complete the pattern symmetrically?"
+      ],
+      "example_stems": [
+        "An equilateral triangle is rotated. Through what angle?",
+        "How many tiles needed to make a symmetric pattern?"
+      ]
+    },
+    {
+      "id": "missing-dimensions",
+      "name": "Finding Missing Dimensions",
+      "description": "Using area or perimeter formulas to find unknown lengths",
+      "difficulty_min": 2,
+      "difficulty_max": 3,
+      "bloom_levels": ["analysis"],
+      "common_misconceptions": [
+        "Dividing when should multiply or vice versa",
+        "Using wrong formula for given information",
+        "Confusing area and perimeter formulas"
+      ],
+      "question_patterns": [
+        "A rectangle has area {A} and length {L}. Find the width.",
+        "A rectangle has perimeter {P} and one side {S}. Find the other."
+      ],
+      "example_stems": [
+        "A rectangle has area 96 cm squared and length 12 cm. Find width.",
+        "A field has perimeter 54 m and length 16 m. Find width."
+      ]
+    }
+  ]
+}
