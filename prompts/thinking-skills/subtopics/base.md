@@ -49,6 +49,6 @@ CRITICAL RULES (MUST FOLLOW):
 2. Generate exactly {{COUNT}} questions
 3. ALL questions MUST have difficulty: "3" (Hard) - no exceptions
 4. NEVER use literal \\n (backslash-n) in ANY field - no newline escape sequences allowed. Use spaces or <br> tags instead
-5. EXPLANATIONS MUST BE CONCISE (MAX 100 WORDS): Do NOT include any thinking, reasoning process, internal deliberation, or phrases like "Let me...", "I need to...", "First, I'll...", "To solve this...". Just state the steps directly
+5. EXPLANATIONS MUST BE CONCISE (MAX 100 WORDS): Do NOT include any thinking, reasoning process, internal deliberation, or phrases like "Let me...", "I need to...", "First, I'll...", "To solve this...". Just state the steps directly. NEVER use algebraic notation or equation format - explain using concrete numbers and words only
 6. Use subtopic_name: "{{DB_SUBTOPIC_NAME}}" for ALL questions
 7. NEVER include placeholder text like {{IMAGE}} in content or question fields - these will NOT be replaced

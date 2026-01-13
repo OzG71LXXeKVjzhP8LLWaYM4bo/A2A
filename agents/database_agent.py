@@ -233,7 +233,7 @@ class DatabaseAgent(BaseAgent):
                         exam_code,
                         exam_name,
                         exam_data.get("description", ""),
-                        exam_data.get("type", "thinking-skills"),
+                        exam_data.get("type", "thinking_skills"),
                         exam_data.get("time_limit", 45),
                         question_count,
                         exam_data.get("is_active", True),

@@ -207,8 +207,6 @@ class OrchestratorAgent(BaseAgent):
                 result["steps"].append({"step": "create_exam", "status": "in_progress"})
 
                 topic_id = config.topic_uuids.get(exam_type)
-                # Convert exam_type to hyphenated format for database (e.g., "thinking_skills" -> "thinking-skills")
-                exam_type_db = exam_type.replace("_", "-")
 
                 # Default time limits per exam type (NSW Selective format)
                 default_time_limits = {
@@ -223,7 +221,7 @@ class OrchestratorAgent(BaseAgent):
                         "code": exam_code,
                         "name": exam_name,
                         "description": exam_config.get("exam_description", ""),
-                        "type": exam_type_db,
+                        "type": exam_type,
                         "time_limit": exam_config.get("time_limit", default_time),
                         "question_count": len(question_ids),
                         "topic_id": topic_id,

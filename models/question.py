@@ -237,7 +237,7 @@ class Exam(BaseModel):
     code: str
     name: str
     description: str = ""
-    type: str = "thinking-skills"
+    type: str = "thinking_skills"
     time_limit: int = 45
     question_count: int = 0
     topic_id: Optional[UUID] = None
